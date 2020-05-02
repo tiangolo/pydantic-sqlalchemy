@@ -6,7 +6,7 @@ from sqlalchemy.orm.properties import ColumnProperty
 
 
 class OrmConfig(BaseConfig):
-    orm_config = True
+    orm_mode = True
 
 
 def sqlalchemy_to_pydantic(db_model: Type) -> Type[BaseModel]:
