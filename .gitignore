@@ -1,0 +1,4 @@
+*.pyc
+.vscode
+*.egg-info
+.mypy_cache
