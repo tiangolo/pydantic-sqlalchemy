@@ -2,3 +2,4 @@
 .vscode
 *.egg-info
 .mypy_cache
+dist
