@@ -6,7 +6,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -24,4 +24,6 @@ jobs:
           pip install poetry
           poetry install
       - name: Test
-        run: bash scripts/test.sh
+        run: |
+          poetry shell
+          bash scripts/test.sh
