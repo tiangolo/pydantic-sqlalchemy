@@ -5,3 +5,4 @@
 dist
 poetry.lock
 .coverage
+coverage.xml

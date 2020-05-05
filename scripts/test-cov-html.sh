@@ -3,4 +3,4 @@
 set -e
 set -x
 
-bash scripts/test.sh --cov-report=html --cov-report=xml ${@}
+bash scripts/test.sh --cov-report=html ${@}
