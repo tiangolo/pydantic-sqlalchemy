@@ -1,6 +1,17 @@
 # Pydantic-SQLAlchemy
 
-[![Test](https://github.com/tiangolo/pydantic-sqlalchemy/workflows/Test/badge.svg)](https://github.com/tiangolo/pydantic-sqlalchemy/actions?query=workflow%3ATest) [![Publish](https://github.com/tiangolo/pydantic-sqlalchemy/workflows/Publish/badge.svg)](https://github.com/tiangolo/pydantic-sqlalchemy/actions?query=workflow%3APublish)
+<a href="https://github.com/tiangolo/pydantic-sqlalchemy/actions?query=workflow%3ATest" target="_blank">
+    <img src="https://github.com/tiangolo/pydantic-sqlalchemy/workflows/Test/badge.svg" alt="Test">
+</a>
+<a href="https://github.com/tiangolo/pydantic-sqlalchemy/actions?query=workflow%3APublish" target="_blank">
+    <img src="https://github.com/tiangolo/pydantic-sqlalchemy/workflows/Publish/badge.svg" alt="Test">
+</a>
+<a href="https://codecov.io/gh/tiangolo/pydantic-sqlalchemy" target="_blank">
+    <img src="https://img.shields.io/codecov/c/github/tiangolo/pydantic-sqlalchemy?color=%2334D058" alt="Coverage">
+</a>
+<a href="https://pypi.org/project/pydantic-sqlalchemy" target="_blank">
+    <img src="https://img.shields.io/pypi/v/pydantic-sqlalchemy?color=%2334D058&label=pypi%20package" alt="Package version">
+</a>
 
 Tools to generate Pydantic models from SQLAlchemy models.
 
@@ -92,6 +103,12 @@ def test_pydantic_sqlalchemy():
         ],
     }
 ```
+
+## Release Notes
+
+### Latest Changes
+
+* Add CI with GitHub Actions. PR [#2](https://github.com/tiangolo/pydantic-sqlalchemy/pull/2).
 
 ## License
 
