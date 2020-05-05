@@ -3,3 +3,5 @@
 *.egg-info
 .mypy_cache
 dist
+.coverage
+coverage.xml

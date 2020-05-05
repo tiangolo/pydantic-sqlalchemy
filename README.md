@@ -1,5 +1,7 @@
 # Pydantic-SQLAlchemy
 
+[![Test](https://github.com/tiangolo/pydantic-sqlalchemy/workflows/Test/badge.svg)](https://github.com/tiangolo/pydantic-sqlalchemy/actions?query=workflow%3ATest) [![Publish](https://github.com/tiangolo/pydantic-sqlalchemy/workflows/Publish/badge.svg)](https://github.com/tiangolo/pydantic-sqlalchemy/actions?query=workflow%3APublish)
+
 Tools to generate Pydantic models from SQLAlchemy models.
 
 Still experimental.
