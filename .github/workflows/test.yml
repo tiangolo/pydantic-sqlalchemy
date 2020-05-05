@@ -24,5 +24,4 @@ jobs:
           pip install poetry
           poetry install
       - name: Test
-        run:
-          poetry run pytest --cov=pydantic_sqlalchemy --cov=tests --cov-report=term-missing
+        run: poetry run bash scripts/test.sh

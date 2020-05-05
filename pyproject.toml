@@ -21,6 +21,7 @@ autoflake = "^1.3.1"
 flake8 = "^3.7.9"
 pytest = "^5.4.1"
 sqlalchemy-stubs = "^0.3"
+pytest-cov = "^2.8.1"
 
 [build-system]
 requires = ["poetry>=0.12"]
