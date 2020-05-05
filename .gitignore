@@ -3,6 +3,5 @@
 *.egg-info
 .mypy_cache
 dist
-poetry.lock
 .coverage
 coverage.xml
