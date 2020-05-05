@@ -4,3 +4,4 @@
 .mypy_cache
 dist
 poetry.lock
+.coverage
