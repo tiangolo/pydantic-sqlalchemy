@@ -108,3 +108,24 @@ def test_config() -> None:
             {"emailAddress": "eddy@example.com", "id": 2, "userId": 1},
         ],
     }
+
+
+def test_exclude() -> None:
+    PydanticUser = sqlalchemy_to_pydantic(User, exclude={"nickname"})
+    PydanticAddress = sqlalchemy_to_pydantic(Address, exclude={"user_id"})
+
+    class PydanticUserWithAddresses(PydanticUser):
+        addresses: List[PydanticAddress] = []
+
+    user = db.query(User).first()
+    pydantic_user_with_addresses = PydanticUserWithAddresses.from_orm(user)
+    data = pydantic_user_with_addresses.dict(by_alias=True)
+    assert data == {
+        "fullname": "Ed Jones",
+        "id": 1,
+        "name": "ed",
+        "addresses": [
+            {"email_address": "ed@example.com", "id": 1},
+            {"email_address": "eddy@example.com", "id": 2},
+        ],
+    }

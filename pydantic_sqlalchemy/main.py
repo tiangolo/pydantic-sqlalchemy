@@ -1,4 +1,4 @@
-from typing import Type
+from typing import Container, Type
 
 from pydantic import BaseConfig, BaseModel, create_model
 from sqlalchemy.inspection import inspect
@@ -10,7 +10,7 @@ class OrmConfig(BaseConfig):
 
 
 def sqlalchemy_to_pydantic(
-    db_model: Type, *, config: Type = OrmConfig
+    db_model: Type, *, config: Type = OrmConfig, exclude: Container[str] = []
 ) -> Type[BaseModel]:
     mapper = inspect(db_model)
     fields = {}
@@ -20,6 +20,8 @@ def sqlalchemy_to_pydantic(
                 column = attr.columns[0]
                 python_type = column.type.python_type
                 name = attr.key
+                if name in exclude:
+                    continue
                 default = column.default
                 if default is None and not column.nullable:
                     default = ...
