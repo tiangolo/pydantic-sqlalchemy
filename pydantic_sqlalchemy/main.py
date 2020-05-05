@@ -9,7 +9,9 @@ class OrmConfig(BaseConfig):
     orm_mode = True
 
 
-def sqlalchemy_to_pydantic(db_model: Type) -> Type[BaseModel]:
+def sqlalchemy_to_pydantic(
+    db_model: Type, *, config: Type = OrmConfig
+) -> Type[BaseModel]:
     mapper = inspect(db_model)
     fields = {}
     for attr in mapper.attrs:
@@ -23,6 +25,6 @@ def sqlalchemy_to_pydantic(db_model: Type) -> Type[BaseModel]:
                     default = ...
                 fields[name] = (python_type, default)
     pydantic_model = create_model(
-        db_model.__name__, __config__=OrmConfig, **fields  # type: ignore
+        db_model.__name__, __config__=config, **fields  # type: ignore
     )
     return pydantic_model

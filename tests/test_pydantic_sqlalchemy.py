@@ -32,14 +32,6 @@ class Address(Base):
     user = relationship("User", back_populates="addresses")
 
 
-PydanticUser = sqlalchemy_to_pydantic(User)
-PydanticAddress = sqlalchemy_to_pydantic(Address)
-
-
-class PydanticUserWithAddresses(PydanticUser):
-    addresses: List[PydanticAddress] = []
-
-
 Base.metadata.create_all(engine)
 
 
@@ -56,7 +48,13 @@ db.add(ed_user)
 db.commit()
 
 
-def test_pydantic_sqlalchemy():
+def test_defaults() -> None:
+    PydanticUser = sqlalchemy_to_pydantic(User)
+    PydanticAddress = sqlalchemy_to_pydantic(Address)
+
+    class PydanticUserWithAddresses(PydanticUser):
+        addresses: List[PydanticAddress] = []
+
     user = db.query(User).first()
     pydantic_user = PydanticUser.from_orm(user)
     data = pydantic_user.dict()
@@ -76,5 +74,37 @@ def test_pydantic_sqlalchemy():
         "addresses": [
             {"email_address": "ed@example.com", "id": 1, "user_id": 1},
             {"email_address": "eddy@example.com", "id": 2, "user_id": 1},
+        ],
+    }
+
+
+def test_config() -> None:
+    class Config:
+        orm_mode = True
+        allow_population_by_field_name = True
+
+        @classmethod
+        def alias_generator(cls, string: str) -> str:
+            pascal_case = "".join(word.capitalize() for word in string.split("_"))
+            camel_case = pascal_case[0].lower() + pascal_case[1:]
+            return camel_case
+
+    PydanticUser = sqlalchemy_to_pydantic(User)
+    PydanticAddress = sqlalchemy_to_pydantic(Address, config=Config)
+
+    class PydanticUserWithAddresses(PydanticUser):
+        addresses: List[PydanticAddress] = []
+
+    user = db.query(User).first()
+    pydantic_user_with_addresses = PydanticUserWithAddresses.from_orm(user)
+    data = pydantic_user_with_addresses.dict(by_alias=True)
+    assert data == {
+        "fullname": "Ed Jones",
+        "id": 1,
+        "name": "ed",
+        "nickname": "edsnickname",
+        "addresses": [
+            {"emailAddress": "ed@example.com", "id": 1, "userId": 1},
+            {"emailAddress": "eddy@example.com", "id": 2, "userId": 1},
         ],
     }
