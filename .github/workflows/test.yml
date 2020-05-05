@@ -27,6 +27,3 @@ jobs:
         run: poetry run bash scripts/test.sh
       - name: Upload coverage
         uses: codecov/codecov-action@v1
-        with:
-          file: ./coverage.xml
-          flags: unittests
