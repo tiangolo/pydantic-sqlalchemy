@@ -1,7 +1,8 @@
+from datetime import datetime
 from typing import List
 
 from pydantic_sqlalchemy import sqlalchemy_to_pydantic
-from sqlalchemy import Column, ForeignKey, Integer, String, create_engine
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, relationship, sessionmaker
 
@@ -17,6 +18,7 @@ class User(Base):
     name = Column(String)
     fullname = Column(String)
     nickname = Column(String)
+    updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     addresses = relationship(
         "Address", back_populates="user", cascade="all, delete, delete-orphan"
@@ -58,7 +60,10 @@ def test_defaults() -> None:
     user = db.query(User).first()
     pydantic_user = PydanticUser.from_orm(user)
     data = pydantic_user.dict()
-    assert data == {
+    assert isinstance(data["updated"], datetime)
+    check_data = data.copy()
+    del check_data["updated"]
+    assert check_data == {
         "fullname": "Ed Jones",
         "id": 1,
         "name": "ed",
@@ -66,7 +71,10 @@ def test_defaults() -> None:
     }
     pydantic_user_with_addresses = PydanticUserWithAddresses.from_orm(user)
     data = pydantic_user_with_addresses.dict()
-    assert data == {
+    assert isinstance(data["updated"], datetime)
+    check_data = data.copy()
+    del check_data["updated"]
+    assert check_data == {
         "fullname": "Ed Jones",
         "id": 1,
         "name": "ed",
@@ -75,6 +83,33 @@ def test_defaults() -> None:
             {"email_address": "ed@example.com", "id": 1, "user_id": 1},
             {"email_address": "eddy@example.com", "id": 2, "user_id": 1},
         ],
+    }
+
+
+def test_schema() -> None:
+    PydanticUser = sqlalchemy_to_pydantic(User)
+    PydanticAddress = sqlalchemy_to_pydantic(Address)
+    assert PydanticUser.schema() == {
+        "title": "User",
+        "type": "object",
+        "properties": {
+            "id": {"title": "Id", "type": "integer"},
+            "name": {"title": "Name", "type": "string"},
+            "fullname": {"title": "Fullname", "type": "string"},
+            "nickname": {"title": "Nickname", "type": "string"},
+            "updated": {"title": "Updated", "type": "string", "format": "date-time"},
+        },
+        "required": ["id"],
+    }
+    assert PydanticAddress.schema() == {
+        "title": "Address",
+        "type": "object",
+        "properties": {
+            "id": {"title": "Id", "type": "integer"},
+            "email_address": {"title": "Email Address", "type": "string"},
+            "user_id": {"title": "User Id", "type": "integer"},
+        },
+        "required": ["id", "email_address"],
     }
 
 
@@ -98,7 +133,10 @@ def test_config() -> None:
     user = db.query(User).first()
     pydantic_user_with_addresses = PydanticUserWithAddresses.from_orm(user)
     data = pydantic_user_with_addresses.dict(by_alias=True)
-    assert data == {
+    assert isinstance(data["updated"], datetime)
+    check_data = data.copy()
+    del check_data["updated"]
+    assert check_data == {
         "fullname": "Ed Jones",
         "id": 1,
         "name": "ed",
@@ -120,7 +158,10 @@ def test_exclude() -> None:
     user = db.query(User).first()
     pydantic_user_with_addresses = PydanticUserWithAddresses.from_orm(user)
     data = pydantic_user_with_addresses.dict(by_alias=True)
-    assert data == {
+    assert isinstance(data["updated"], datetime)
+    check_data = data.copy()
+    del check_data["updated"]
+    assert check_data == {
         "fullname": "Ed Jones",
         "id": 1,
         "name": "ed",
