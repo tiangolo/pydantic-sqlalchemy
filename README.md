@@ -108,6 +108,8 @@ def test_pydantic_sqlalchemy():
 
 ### Latest Changes
 
+* Do not include SQLAlchemy defaults in Pydantic models. PR [#4](https://github.com/tiangolo/pydantic-sqlalchemy/pull/4).
+
 ### 0.0.3
 
 * Add support for `exclude` to exclude columns from Pydantic model. PR [#3](https://github.com/tiangolo/pydantic-sqlalchemy/pull/3).
