@@ -22,8 +22,8 @@ def sqlalchemy_to_pydantic(
                 name = attr.key
                 if name in exclude:
                     continue
-                default = column.default
-                if default is None and not column.nullable:
+                default = None
+                if column.default is None and not column.nullable:
                     default = ...
                 fields[name] = (python_type, default)
     pydantic_model = create_model(
