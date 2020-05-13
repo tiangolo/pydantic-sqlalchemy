@@ -17,11 +17,11 @@ def sqlalchemy_to_pydantic(
     for attr in mapper.attrs:
         if isinstance(attr, ColumnProperty):
             if attr.columns:
-                column = attr.columns[0]
-                python_type = column.type.python_type
                 name = attr.key
                 if name in exclude:
                     continue
+                column = attr.columns[0]
+                python_type = column.type.python_type
                 default = None
                 if column.default is None and not column.nullable:
                     default = ...
