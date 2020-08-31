@@ -1,4 +1,4 @@
-from typing import Container, Type
+from typing import Container, Optional, Type
 
 from pydantic import BaseConfig, BaseModel, create_model
 from sqlalchemy.inspection import inspect
@@ -21,7 +21,13 @@ def sqlalchemy_to_pydantic(
                 if name in exclude:
                     continue
                 column = attr.columns[0]
-                python_type = column.type.python_type
+                python_type: Optional[type] = None
+                if hasattr(column.type, "impl"):
+                    if hasattr(column.type.impl, "python_type"):
+                        python_type = column.type.impl.python_type
+                elif hasattr(column.type, "python_type"):
+                    python_type = column.type.python_type
+                assert python_type, f"Could not infer python_type for {column}"
                 default = None
                 if column.default is None and not column.nullable:
                     default = ...
