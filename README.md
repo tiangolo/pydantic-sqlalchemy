@@ -108,6 +108,8 @@ def test_pydantic_sqlalchemy():
 
 ### Latest Changes
 
+### 0.0.6
+
 * Add support for SQLAlchemy extended types like [sqlalchemy-utc: UtcDateTime](https://github.com/spoqa/sqlalchemy-utc). PR [#9](https://github.com/tiangolo/pydantic-sqlalchemy/pull/9).
 
 ### 0.0.5
