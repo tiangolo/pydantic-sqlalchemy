@@ -1,14 +1,19 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List
 
 from pydantic_sqlalchemy import sqlalchemy_to_pydantic
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, relationship, sessionmaker
+from sqlalchemy_utc import UtcDateTime
 
 Base = declarative_base()
 
 engine = create_engine("sqlite://", echo=True)
+
+
+def utc_now() -> datetime:
+    return datetime.now(tz=timezone.utc)
 
 
 class User(Base):
@@ -18,7 +23,8 @@ class User(Base):
     name = Column(String)
     fullname = Column(String)
     nickname = Column(String)
-    updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created = Column(DateTime, default=datetime.utcnow)
+    updated = Column(UtcDateTime, default=utc_now, onupdate=utc_now)
 
     addresses = relationship(
         "Address", back_populates="user", cascade="all, delete, delete-orphan"
@@ -60,8 +66,10 @@ def test_defaults() -> None:
     user = db.query(User).first()
     pydantic_user = PydanticUser.from_orm(user)
     data = pydantic_user.dict()
+    assert isinstance(data["created"], datetime)
     assert isinstance(data["updated"], datetime)
     check_data = data.copy()
+    del check_data["created"]
     del check_data["updated"]
     assert check_data == {
         "fullname": "Ed Jones",
@@ -72,8 +80,10 @@ def test_defaults() -> None:
     pydantic_user_with_addresses = PydanticUserWithAddresses.from_orm(user)
     data = pydantic_user_with_addresses.dict()
     assert isinstance(data["updated"], datetime)
+    assert isinstance(data["created"], datetime)
     check_data = data.copy()
     del check_data["updated"]
+    del check_data["created"]
     assert check_data == {
         "fullname": "Ed Jones",
         "id": 1,
@@ -97,6 +107,7 @@ def test_schema() -> None:
             "name": {"title": "Name", "type": "string"},
             "fullname": {"title": "Fullname", "type": "string"},
             "nickname": {"title": "Nickname", "type": "string"},
+            "created": {"title": "Created", "type": "string", "format": "date-time"},
             "updated": {"title": "Updated", "type": "string", "format": "date-time"},
         },
         "required": ["id"],
@@ -133,8 +144,10 @@ def test_config() -> None:
     user = db.query(User).first()
     pydantic_user_with_addresses = PydanticUserWithAddresses.from_orm(user)
     data = pydantic_user_with_addresses.dict(by_alias=True)
+    assert isinstance(data["created"], datetime)
     assert isinstance(data["updated"], datetime)
     check_data = data.copy()
+    del check_data["created"]
     del check_data["updated"]
     assert check_data == {
         "fullname": "Ed Jones",
@@ -158,8 +171,10 @@ def test_exclude() -> None:
     user = db.query(User).first()
     pydantic_user_with_addresses = PydanticUserWithAddresses.from_orm(user)
     data = pydantic_user_with_addresses.dict(by_alias=True)
+    assert isinstance(data["created"], datetime)
     assert isinstance(data["updated"], datetime)
     check_data = data.copy()
+    del check_data["created"]
     del check_data["updated"]
     assert check_data == {
         "fullname": "Ed Jones",
