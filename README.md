@@ -108,6 +108,10 @@ def test_pydantic_sqlalchemy():
 
 ### Latest Changes
 
+### 0.0.7
+
+* Update requirements of `importlib-metadata` to support the latest version `2.0.0`. PR [#11](https://github.com/tiangolo/pydantic-sqlalchemy/pull/11).
+
 ### 0.0.6
 
 * Add support for SQLAlchemy extended types like [sqlalchemy-utc: UtcDateTime](https://github.com/spoqa/sqlalchemy-utc). PR [#9](https://github.com/tiangolo/pydantic-sqlalchemy/pull/9).
