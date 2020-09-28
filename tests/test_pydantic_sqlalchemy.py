@@ -29,6 +29,9 @@ class User(Base):
     addresses = relationship(
         "Address", back_populates="user", cascade="all, delete, delete-orphan"
     )
+    orders = relationship(
+        "Order", back_populates="user", cascade="all, delete, delete-orphan"
+    )
 
 
 class Address(Base):
@@ -38,6 +41,23 @@ class Address(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
 
     user = relationship("User", back_populates="addresses")
+
+
+class Order(Base):
+    __tablename__ = "orders"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    address_id = Column(Integer, ForeignKey("addresses.id"))
+    description = Column(
+        String(100),
+        pydantic_description="This description describes description field",
+        pydantic_max_length=100,
+    )
+    quantity = Column(Integer, pydantic_gt=1, pydantic_le=100)
+    total = Column(Integer, pydantic_ge=0)
+
+    user = relationship("User", back_populates="orders")
+    address = relationship("User", back_populates="orders")
 
 
 Base.metadata.create_all(engine)
@@ -184,4 +204,24 @@ def test_exclude() -> None:
             {"email_address": "ed@example.com", "id": 1},
             {"email_address": "eddy@example.com", "id": 2},
         ],
+    }
+
+
+def test_custom_arguments() -> None:
+    PydanticOrder = sqlalchemy_to_pydantic(Order, exclude={"user_id", "address_id"})
+    assert PydanticOrder.schema()["properties"] == {
+        "id": {"title": "Id", "type": "integer"},
+        "description": {
+            "title": "Description",
+            "description": "This description describes description field",
+            "maxLength": 100,
+            "type": "string",
+        },
+        "quantity": {
+            "title": "Quantity",
+            "exclusiveMinimum": 1,
+            "maximum": 100,
+            "type": "integer",
+        },
+        "total": {"title": "Total", "minimum": 0, "type": "integer"},
     }

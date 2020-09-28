@@ -1,8 +1,42 @@
-from typing import Container, Optional, Type
+from typing import Any, Container, Dict, Optional, Tuple, Type, cast
 
-from pydantic import BaseConfig, BaseModel, create_model
+from pydantic import BaseConfig, BaseModel, Field, create_model
 from sqlalchemy.inspection import inspect
 from sqlalchemy.orm.properties import ColumnProperty
+from sqlalchemy.sql.base import DialectKWArgs, _DialectArgView
+
+__field_arguments = (
+    "alias",
+    "title",
+    "description",
+    "const",
+    "gt",
+    "ge",
+    "lt",
+    "le",
+    "multiple_of",
+    "min_items",
+    "max_items",
+    "min_length",
+    "max_length",
+    "regex",
+    "example",
+)
+
+
+def make_field(
+    column: DialectKWArgs, python_type: Optional[type], default: Any
+) -> Tuple[Optional[type], Any]:
+    arguments: Dict[str, Any]
+    dialect_options = column.dialect_options
+    cast(_DialectArgView, dialect_options)
+    if "pydantic" not in dialect_options:
+        return python_type, default
+    pydantic_args = dialect_options["pydantic"]
+    arguments = {
+        arg: pydantic_args[arg] for arg in __field_arguments if arg in pydantic_args
+    }
+    return python_type, Field(default, **arguments)
 
 
 class OrmConfig(BaseConfig):
@@ -31,7 +65,7 @@ def sqlalchemy_to_pydantic(
                 default = None
                 if column.default is None and not column.nullable:
                     default = ...
-                fields[name] = (python_type, default)
+                fields[name] = make_field(column, python_type, default)
     pydantic_model = create_model(
         db_model.__name__, __config__=config, **fields  # type: ignore
     )
