@@ -108,9 +108,12 @@ def test_pydantic_sqlalchemy():
 
 ### Latest Changes
 
+### 0.0.8
+
 * ⬆️ Upgrade `importlib-metadata` to 3.0.0. PR [#22](https://github.com/tiangolo/pydantic-sqlalchemy/pull/22) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Add GitHub Action latest-changes. PR [#20](https://github.com/tiangolo/pydantic-sqlalchemy/pull/20) by [@tiangolo](https://github.com/tiangolo).
 * 💚 Fix GitHub Actions Poetry setup. PR [#21](https://github.com/tiangolo/pydantic-sqlalchemy/pull/21) by [@tiangolo](https://github.com/tiangolo).
+
 ### 0.0.7
 
 * Update requirements of `importlib-metadata` to support the latest version `2.0.0`. PR [#11](https://github.com/tiangolo/pydantic-sqlalchemy/pull/11).
