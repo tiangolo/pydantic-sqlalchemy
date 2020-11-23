@@ -2,4 +2,4 @@
 
 set -e
 
-poetry publish --build
+python -m poetry publish --build
