@@ -30,7 +30,7 @@ jobs:
         if: steps.cache.outputs.cache-hit == 'true'
         run: python -m poetry run pip --version >/dev/null 2>&1 || rm -rf .venv
       - name: Install Dependencies
-        run: poetry install
+        run: python -m poetry install
       - name: Publish
         env:
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
