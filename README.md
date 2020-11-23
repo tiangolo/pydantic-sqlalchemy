@@ -108,6 +108,7 @@ def test_pydantic_sqlalchemy():
 
 ### Latest Changes
 
+* 👷 Add GitHub Action latest-changes. PR [#20](https://github.com/tiangolo/pydantic-sqlalchemy/pull/20) by [@tiangolo](https://github.com/tiangolo).
 * 💚 Fix GitHub Actions Poetry setup. PR [#21](https://github.com/tiangolo/pydantic-sqlalchemy/pull/21) by [@tiangolo](https://github.com/tiangolo).
 ### 0.0.7
 
