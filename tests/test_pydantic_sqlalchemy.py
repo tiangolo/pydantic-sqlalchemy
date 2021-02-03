@@ -4,6 +4,7 @@ from typing import List
 from pydantic_sqlalchemy import sqlalchemy_to_pydantic
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Session, relationship, sessionmaker
 from sqlalchemy_utc import UtcDateTime
 
@@ -41,7 +42,6 @@ class Address(Base):
 
 
 Base.metadata.create_all(engine)
-
 
 LocalSession = sessionmaker(bind=engine)
 
@@ -185,3 +185,49 @@ def test_exclude() -> None:
             {"email_address": "eddy@example.com", "id": 2},
         ],
     }
+
+
+def test_model_with_property() -> None:
+    class Person(Base):
+        __tablename__ = "persons"
+        id = Column(Integer, primary_key=True)
+        name = Column(String)
+        firstname = Column(String)
+
+        @property
+        def full_name(self) -> str:
+            return self.firstname + " " + self.name
+
+    PydanticPerson = sqlalchemy_to_pydantic(Person)
+
+    person = Person(id=1, name="Doe", firstname="John")
+    pydantic_person = PydanticPerson.from_orm(person)
+    data = pydantic_person.dict()
+
+    assert data["id"] == 1
+    assert data["name"] == "Doe"
+    assert data["firstname"] == "John"
+    assert data["full_name"] == "John Doe"
+
+
+def test_model_with_hybird_property() -> None:
+    class PersonHybridProperty(Base):
+        __tablename__ = "persons_hybrid_properties"
+        id = Column(Integer, primary_key=True)
+        name = Column(String)
+        firstname = Column(String)
+
+        @hybrid_property
+        def full_name(self) -> str:
+            return self.firstname + " " + self.name
+
+    PydanticPerson = sqlalchemy_to_pydantic(PersonHybridProperty)
+
+    person = PersonHybridProperty(id=1, name="Doe", firstname="John")
+    pydantic_person = PydanticPerson.from_orm(person)
+    data = pydantic_person.dict()
+
+    assert data["id"] == 1
+    assert data["name"] == "Doe"
+    assert data["firstname"] == "John"
+    assert data["full_name"] == "John Doe"

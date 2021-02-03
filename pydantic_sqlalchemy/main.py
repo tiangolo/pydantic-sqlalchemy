@@ -1,7 +1,10 @@
+import inspect
+import typing
 from typing import Container, Optional, Type
 
+import sqlalchemy.inspection
 from pydantic import BaseConfig, BaseModel, create_model
-from sqlalchemy.inspection import inspect
+from sqlalchemy.orm.attributes import InstrumentedAttribute, QueryableAttribute
 from sqlalchemy.orm.properties import ColumnProperty
 
 
@@ -12,7 +15,7 @@ class OrmConfig(BaseConfig):
 def sqlalchemy_to_pydantic(
     db_model: Type, *, config: Type = OrmConfig, exclude: Container[str] = []
 ) -> Type[BaseModel]:
-    mapper = inspect(db_model)
+    mapper = sqlalchemy.inspection.inspect(db_model)
     fields = {}
     for attr in mapper.attrs:
         if isinstance(attr, ColumnProperty):
@@ -32,7 +35,20 @@ def sqlalchemy_to_pydantic(
                 if column.default is None and not column.nullable:
                     default = ...
                 fields[name] = (python_type, default)
+
+    for name, attr in inspect.getmembers(db_model):
+        if isinstance(attr, property) or (
+            isinstance(attr, QueryableAttribute)
+            and not isinstance(attr, InstrumentedAttribute)
+        ):
+            if name in exclude:
+                continue
+            return_type = typing.get_type_hints(attr.fget).get("return")
+            if return_type:
+                fields[name] = (return_type, None)
+
     pydantic_model = create_model(
         db_model.__name__, __config__=config, **fields  # type: ignore
     )
+
     return pydantic_model
