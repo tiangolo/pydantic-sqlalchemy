@@ -1,62 +1,64 @@
 from datetime import datetime, timezone
 from typing import List
 
+import pytest
 from pydantic_sqlalchemy import sqlalchemy_to_pydantic
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, create_engine
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.orm import Session, relationship, sessionmaker
+from sqlalchemy.orm import relationship
 from sqlalchemy_utc import UtcDateTime
 
-Base = declarative_base()
 
-engine = create_engine("sqlite://", echo=True)
+@pytest.fixture
+def User(Base) -> "User":
+    class User(Base):
+        __tablename__ = "users"
+
+        id = Column(Integer, primary_key=True)
+        name = Column(String)
+        fullname = Column(String)
+        nickname = Column(String)
+        created = Column(DateTime, default=datetime.utcnow)
+        updated = Column(UtcDateTime, default=utc_now, onupdate=utc_now)
+
+        addresses = relationship(
+            "Address", back_populates="user", cascade="all, delete, delete-orphan"
+        )
+
+    return User
+
+
+@pytest.fixture
+def Address(Base) -> "Address":
+    class Address(Base):
+        __tablename__ = "addresses"
+
+        id = Column(Integer, primary_key=True)
+        email_address = Column(String, nullable=False)
+        user_id = Column(Integer, ForeignKey("users.id"))
+
+        user = relationship("User", back_populates="addresses")
+
+    return Address
+
+
+@pytest.fixture
+def default_user_with_addresses(Address, User):
+    ed_user = User(name="ed", fullname="Ed Jones", nickname="edsnickname")
+    address = Address(email_address="ed@example.com")
+    address2 = Address(email_address="eddy@example.com")
+    ed_user.addresses = [address, address2]
+
+    return ed_user
 
 
 def utc_now() -> datetime:
     return datetime.now(tz=timezone.utc)
 
 
-class User(Base):
-    __tablename__ = "users"
+def test_defaults(User, Address, default_user_with_addresses, create_db) -> None:
+    db = create_db([default_user_with_addresses])
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    fullname = Column(String)
-    nickname = Column(String)
-    created = Column(DateTime, default=datetime.utcnow)
-    updated = Column(UtcDateTime, default=utc_now, onupdate=utc_now)
-
-    addresses = relationship(
-        "Address", back_populates="user", cascade="all, delete, delete-orphan"
-    )
-
-
-class Address(Base):
-    __tablename__ = "addresses"
-    id = Column(Integer, primary_key=True)
-    email_address = Column(String, nullable=False)
-    user_id = Column(Integer, ForeignKey("users.id"))
-
-    user = relationship("User", back_populates="addresses")
-
-
-Base.metadata.create_all(engine)
-
-LocalSession = sessionmaker(bind=engine)
-
-db: Session = LocalSession()
-
-ed_user = User(name="ed", fullname="Ed Jones", nickname="edsnickname")
-
-address = Address(email_address="ed@example.com")
-address2 = Address(email_address="eddy@example.com")
-ed_user.addresses = [address, address2]
-db.add(ed_user)
-db.commit()
-
-
-def test_defaults() -> None:
     PydanticUser = sqlalchemy_to_pydantic(User)
     PydanticAddress = sqlalchemy_to_pydantic(Address)
 
@@ -96,7 +98,7 @@ def test_defaults() -> None:
     }
 
 
-def test_schema() -> None:
+def test_schema(User, Address) -> None:
     PydanticUser = sqlalchemy_to_pydantic(User)
     PydanticAddress = sqlalchemy_to_pydantic(Address)
     assert PydanticUser.schema() == {
@@ -124,7 +126,9 @@ def test_schema() -> None:
     }
 
 
-def test_config() -> None:
+def test_config(User, Address, default_user_with_addresses, create_db) -> None:
+    db = create_db([default_user_with_addresses])
+
     class Config:
         orm_mode = True
         allow_population_by_field_name = True
@@ -161,7 +165,9 @@ def test_config() -> None:
     }
 
 
-def test_exclude() -> None:
+def test_exclude(User, Address, default_user_with_addresses, create_db) -> None:
+    db = create_db([default_user_with_addresses])
+
     PydanticUser = sqlalchemy_to_pydantic(User, exclude={"nickname"})
     PydanticAddress = sqlalchemy_to_pydantic(Address, exclude={"user_id"})
 
@@ -187,7 +193,7 @@ def test_exclude() -> None:
     }
 
 
-def test_model_with_property() -> None:
+def test_model_with_property(Base) -> None:
     class Person(Base):
         __tablename__ = "persons"
         id = Column(Integer, primary_key=True)
@@ -210,9 +216,9 @@ def test_model_with_property() -> None:
     assert data["full_name"] == "John Doe"
 
 
-def test_model_with_hybird_property() -> None:
-    class PersonHybridProperty(Base):
-        __tablename__ = "persons_hybrid_properties"
+def test_model_with_hybrid_property(Base) -> None:
+    class Person(Base):
+        __tablename__ = "persons"
         id = Column(Integer, primary_key=True)
         name = Column(String)
         firstname = Column(String)
@@ -221,9 +227,9 @@ def test_model_with_hybird_property() -> None:
         def full_name(self) -> str:
             return self.firstname + " " + self.name
 
-    PydanticPerson = sqlalchemy_to_pydantic(PersonHybridProperty)
+    PydanticPerson = sqlalchemy_to_pydantic(Person)
 
-    person = PersonHybridProperty(id=1, name="Doe", firstname="John")
+    person = Person(id=1, name="Doe", firstname="John")
     pydantic_person = PydanticPerson.from_orm(person)
     data = pydantic_person.dict()
 
@@ -231,3 +237,26 @@ def test_model_with_hybird_property() -> None:
     assert data["name"] == "Doe"
     assert data["firstname"] == "John"
     assert data["full_name"] == "John Doe"
+
+
+def test_model_with_hybrid_property_exclude(Base) -> None:
+    class Person(Base):
+        __tablename__ = "persons"
+        id = Column(Integer, primary_key=True)
+        name = Column(String)
+        firstname = Column(String)
+
+        @hybrid_property
+        def full_name(self) -> str:
+            return self.firstname + " " + self.name
+
+    PydanticPerson = sqlalchemy_to_pydantic(Person, exclude=["full_name"])
+
+    person = Person(id=1, name="Doe", firstname="John")
+    pydantic_person = PydanticPerson.from_orm(person)
+    data = pydantic_person.dict()
+
+    assert data["id"] == 1
+    assert data["name"] == "Doe"
+    assert data["firstname"] == "John"
+    assert "full_name" not in data
