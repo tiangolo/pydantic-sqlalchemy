@@ -108,6 +108,7 @@ def test_pydantic_sqlalchemy():
 
 ### Latest Changes
 
+* ✨ Add `poetry-version-plugin`, remove `importlib-metadata` dependency. PR [#32](https://github.com/tiangolo/pydantic-sqlalchemy/pull/32) by [@tiangolo](https://github.com/tiangolo).
 ### 0.0.8.post1
 
 * 💚 Fix setting up Poetry for GitHub Action Publish. PR [#23](https://github.com/tiangolo/pydantic-sqlalchemy/pull/23) by [@tiangolo](https://github.com/tiangolo).
