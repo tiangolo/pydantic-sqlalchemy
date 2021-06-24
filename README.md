@@ -108,6 +108,7 @@ def test_pydantic_sqlalchemy():
 
 ### Latest Changes
 
+* up. PR [#1](https://github.com/Chise1/pydantic-sqlalchemy/pull/1) by [@Chise1](https://github.com/Chise1).
 
 ### 0.0.9
 
