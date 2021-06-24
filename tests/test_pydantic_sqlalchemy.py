@@ -57,8 +57,8 @@ db.commit()
 
 
 def test_defaults() -> None:
-    PydanticUser = sqlalchemy_to_pydantic(User)
-    PydanticAddress = sqlalchemy_to_pydantic(Address)
+    PydanticUser = sqlalchemy_to_pydantic(User,name="PydanticUser")
+    PydanticAddress = sqlalchemy_to_pydantic(Address,name="PydanticAddress")
 
     class PydanticUserWithAddresses(PydanticUser):
         addresses: List[PydanticAddress] = []
@@ -97,10 +97,10 @@ def test_defaults() -> None:
 
 
 def test_schema() -> None:
-    PydanticUser = sqlalchemy_to_pydantic(User)
-    PydanticAddress = sqlalchemy_to_pydantic(Address)
+    PydanticUser = sqlalchemy_to_pydantic(User, name="PydanticUser")
+    PydanticAddress = sqlalchemy_to_pydantic(Address, name="PydanticAddress")
     assert PydanticUser.schema() == {
-        "title": "User",
+        "title": "PydanticUser",
         "type": "object",
         "properties": {
             "id": {"title": "Id", "type": "integer"},
@@ -113,7 +113,7 @@ def test_schema() -> None:
         "required": ["id"],
     }
     assert PydanticAddress.schema() == {
-        "title": "Address",
+        "title": "PydanticAddress",
         "type": "object",
         "properties": {
             "id": {"title": "Id", "type": "integer"},
@@ -135,8 +135,8 @@ def test_config() -> None:
             camel_case = pascal_case[0].lower() + pascal_case[1:]
             return camel_case
 
-    PydanticUser = sqlalchemy_to_pydantic(User)
-    PydanticAddress = sqlalchemy_to_pydantic(Address, config=Config)
+    PydanticUser = sqlalchemy_to_pydantic(User, name="PydanticUserConfig")
+    PydanticAddress = sqlalchemy_to_pydantic(Address, name="PydanticAddressConfig",config=Config)
 
     class PydanticUserWithAddresses(PydanticUser):
         addresses: List[PydanticAddress] = []
@@ -162,8 +162,8 @@ def test_config() -> None:
 
 
 def test_exclude() -> None:
-    PydanticUser = sqlalchemy_to_pydantic(User, exclude={"nickname"})
-    PydanticAddress = sqlalchemy_to_pydantic(Address, exclude={"user_id"})
+    PydanticUser = sqlalchemy_to_pydantic(User, name="PydanticUserExclude",exclude={"nickname"})
+    PydanticAddress = sqlalchemy_to_pydantic(Address, name="PydanticAddressExclude",exclude={"user_id"})
 
     class PydanticUserWithAddresses(PydanticUser):
         addresses: List[PydanticAddress] = []
