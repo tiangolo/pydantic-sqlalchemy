@@ -57,8 +57,8 @@ db.commit()
 
 
 def test_defaults() -> None:
-    PydanticUser = sqlalchemy_to_pydantic(User,name="PydanticUser")
-    PydanticAddress = sqlalchemy_to_pydantic(Address,name="PydanticAddress")
+    PydanticUser = sqlalchemy_to_pydantic(User, name="PydanticUser")
+    PydanticAddress = sqlalchemy_to_pydantic(Address, name="PydanticAddress")
 
     class PydanticUserWithAddresses(PydanticUser):
         addresses: List[PydanticAddress] = []
@@ -136,7 +136,9 @@ def test_config() -> None:
             return camel_case
 
     PydanticUser = sqlalchemy_to_pydantic(User, name="PydanticUserConfig")
-    PydanticAddress = sqlalchemy_to_pydantic(Address, name="PydanticAddressConfig",config=Config)
+    PydanticAddress = sqlalchemy_to_pydantic(
+        Address, name="PydanticAddressConfig", config=Config
+    )
 
     class PydanticUserWithAddresses(PydanticUser):
         addresses: List[PydanticAddress] = []
@@ -162,8 +164,12 @@ def test_config() -> None:
 
 
 def test_exclude() -> None:
-    PydanticUser = sqlalchemy_to_pydantic(User, name="PydanticUserExclude",exclude={"nickname"})
-    PydanticAddress = sqlalchemy_to_pydantic(Address, name="PydanticAddressExclude",exclude={"user_id"})
+    PydanticUser = sqlalchemy_to_pydantic(
+        User, name="PydanticUserExclude", exclude={"nickname"}
+    )
+    PydanticAddress = sqlalchemy_to_pydantic(
+        Address, name="PydanticAddressExclude", exclude={"user_id"}
+    )
 
     class PydanticUserWithAddresses(PydanticUser):
         addresses: List[PydanticAddress] = []
