@@ -56,8 +56,8 @@ class Address(Base):
     user = relationship("User", back_populates="addresses")
 
 
-PydanticUser = sqlalchemy_to_pydantic(User)
-PydanticAddress = sqlalchemy_to_pydantic(Address)
+PydanticUser = sqlalchemy_to_pydantic(User,name="PydanticUser")
+PydanticAddress = sqlalchemy_to_pydantic(Address,name="PydanticAddress")
 
 
 class PydanticUserWithAddresses(PydanticUser):
