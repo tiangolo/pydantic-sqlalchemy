@@ -1,10 +1,11 @@
 from datetime import datetime, timezone
 from typing import List
 
+import pytest
 from pydantic_sqlalchemy import sqlalchemy_to_pydantic
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session, relationship, sessionmaker, joinedload
+from sqlalchemy.orm import Session, joinedload, relationship, sessionmaker
 from sqlalchemy_utc import UtcDateTime
 
 Base = declarative_base()
@@ -53,6 +54,8 @@ address = Address(email_address="ed@example.com")
 address2 = Address(email_address="eddy@example.com")
 ed_user.addresses = [address, address2]
 db.add(ed_user)
+user_no_address = User(name="noo", fullname="NoneAddress", nickname="NoneAddress")
+db.add(user_no_address)
 db.commit()
 
 
@@ -191,9 +194,23 @@ def test_exclude() -> None:
             {"email_address": "eddy@example.com", "id": 2},
         ],
     }
+
+
 def test_relations() -> None:
-    PydanticUser = sqlalchemy_to_pydantic(User, name="PydanticUserRelation",include=("id","name","addresses","addresses.email_address"),depth=1)
-    PydanticAddress = sqlalchemy_to_pydantic(Address, name="PydanticAddressRelation")
+    PydanticUser = sqlalchemy_to_pydantic(
+        User,
+        name="PydanticUserRelation",
+        include=(
+            "id",
+            "name",
+            "addresses",
+            "addresses.email_address",
+            "addresses.id",
+            "addresses.user_id",
+        ),
+        depth=1,
+    )
+    # PydanticAddress = sqlalchemy_to_pydantic(Address, name="PydanticAddressRelation")
 
     user = db.query(User).options(joinedload(User.addresses)).first()
     pydantic_user = PydanticUser.from_orm(user)
@@ -207,19 +224,29 @@ def test_relations() -> None:
             {"email_address": "eddy@example.com", "id": 2, "user_id": 1},
         ],
     }
-    # pydantic_user_with_addresses = PydanticUserWithAddresses.from_orm(user)
-    # data = pydantic_user_with_addresses.dict()
-    # check_data = data.copy()
-    # del check_data["updated"]
-    # del check_data["created"]
-    # assert check_data == {
-    #     "fullname": "Ed Jones",
-    #     "id": 1,
-    #     "name": "ed",
-    #     "nickname": "edsnickname",
-    #     "addresses": [
-    #         {"email_address": "ed@example.com", "id": 1, "user_id": 1},
-    #         {"email_address": "eddy@example.com", "id": 2, "user_id": 1},
-    #     ],
-    # }
+    user2 = (
+        db.query(User)
+        .filter(User.name == "noo")
+        .options(joinedload(User.addresses))
+        .first()
+    )
+    pydantic_user2 = PydanticUser.from_orm(user2)
+    data2 = pydantic_user2.dict()
+    check_data2 = data2.copy()
+    print(check_data2)
+    assert check_data2 == {
+        "id": 2,
+        "name": "noo",
+        "addresses": [],
+    }
 
+
+def test_raiseinfo() -> None:
+    with pytest.raises(AttributeError):
+        sqlalchemy_to_pydantic(
+            User, name="PydanticUserExclude",
+        )
+    with pytest.raises(AttributeError):
+        sqlalchemy_to_pydantic(
+            User, name="PydanticUserRaise", include=["name"], exclude=["nickname"]
+        )

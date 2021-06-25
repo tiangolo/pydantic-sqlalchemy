@@ -1,4 +1,5 @@
-from typing import Any, Container, Dict, List, Optional, Type, Iterable, Set
+from copy import copy
+from typing import Any, Dict, Iterable, List, Optional, Set, Tuple, Type
 
 from pydantic import BaseConfig, BaseModel, create_model
 from sqlalchemy.inspection import inspect
@@ -6,7 +7,7 @@ from sqlalchemy.orm.mapper import Mapper
 from sqlalchemy.orm.properties import ColumnProperty, RelationshipProperty
 from sqlalchemy.util import ImmutableProperties
 
-_schema_cache:Set[str]  = set()
+_schema_cache: Set[str] = set()
 
 
 class OrmConfig(BaseConfig):
@@ -31,22 +32,22 @@ def get_field_attr(attr: ColumnProperty) -> Any:
 
 
 def _sqlalchemy_to_pydantic(
-        mapper: Mapper,
-        include: Iterable[str],
-        exclude: Iterable[str],
-        schema_name: str,
-        depth: int,
-        father_db_names: List[str],
-        config: Type = OrmConfig,
+    mapper: Mapper,
+    include: Iterable[str],
+    exclude: Iterable[str],
+    schema_name: str,
+    depth: int,
+    father_db_names: List[str],
+    config: Type = OrmConfig,
 ) -> Type[BaseModel]:
-    fields = {}
+    fields: Dict[str, Tuple[Any, Any]] = {}
     father_db_names.append(mapper.class_.__name__)
     model_fields: ImmutableProperties = mapper.attrs  # type: ignore
     for model_field in model_fields:
         if (
-                (include and model_field.key in include)
-                or (exclude and model_field.key not in exclude)
-                or (not include and not exclude)
+            (include and model_field.key in include)
+            or (exclude and model_field.key not in exclude)
+            or (not include and not exclude)
         ):
             if isinstance(model_field, RelationshipProperty):
                 if depth <= 0:
@@ -55,13 +56,19 @@ def _sqlalchemy_to_pydantic(
                     if model_field.mapper.class_.__name__ in father_db_names:
                         continue
                     if include:
-                        subinclude = [i.replace(model_field.key + ".", "") for i in include if
-                                      i.startswith(model_field.key + ".")]
+                        subinclude = [
+                            i.replace(model_field.key + ".", "")
+                            for i in include
+                            if i.startswith(model_field.key + ".")
+                        ]
                     else:
                         subinclude = []
                     if exclude:
-                        subexclude = [i.replace(model_field.key + ".", "") for i in include if
-                                      i.startswith(model_field.key + ".")]
+                        subexclude = [
+                            i.replace(model_field.key + ".", "")
+                            for i in include
+                            if i.startswith(model_field.key + ".")
+                        ]
                     else:
                         subexclude = []
                     children_schema = _sqlalchemy_to_pydantic(
@@ -72,9 +79,16 @@ def _sqlalchemy_to_pydantic(
                         depth - 1,
                         father_db_names,
                         config,
-                    )#todo:需要知道到底是select_related还是prefetch_related
-                    # if
-                    fields[model_field.key] = children_schema
+                    )
+                    if model_field.uselist:
+                        fields[model_field.key] = List[children_schema], []  # type: ignore
+                    else:
+                        remote_side = copy(model_field.remote_side).pop()
+                        fields[model_field.key] = (
+                            children_schema,
+                            None if remote_side.nullable else ...,
+                        )
+
             else:
                 fields[model_field.key] = get_field_attr(model_field)
 
@@ -84,13 +98,13 @@ def _sqlalchemy_to_pydantic(
 
 
 def sqlalchemy_to_pydantic(
-        db_model: Type,
-        *,
-        name: str,
-        config: Type = OrmConfig,
-        include: Optional[Iterable[str]] = None,
-        exclude: Optional[Iterable[str]] = None,
-        depth: int = 0,
+    db_model: Type,
+    *,
+    name: str,
+    config: Type = OrmConfig,
+    include: Optional[Iterable[str]] = None,
+    exclude: Optional[Iterable[str]] = None,
+    depth: int = 0,
 ) -> Type[BaseModel]:
     if name in _schema_cache:
         raise AttributeError("Can't create the same name model twice.")
