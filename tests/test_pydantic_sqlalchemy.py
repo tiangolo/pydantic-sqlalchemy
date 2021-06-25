@@ -4,7 +4,7 @@ from typing import List
 from pydantic_sqlalchemy import sqlalchemy_to_pydantic
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session, relationship, sessionmaker
+from sqlalchemy.orm import Session, relationship, sessionmaker, joinedload
 from sqlalchemy_utc import UtcDateTime
 
 Base = declarative_base()
@@ -97,10 +97,10 @@ def test_defaults() -> None:
 
 
 def test_schema() -> None:
-    PydanticUser = sqlalchemy_to_pydantic(User, name="PydanticUser")
-    PydanticAddress = sqlalchemy_to_pydantic(Address, name="PydanticAddress")
+    PydanticUser = sqlalchemy_to_pydantic(User, name="PydanticUserSchema")
+    PydanticAddress = sqlalchemy_to_pydantic(Address, name="PydanticAddressSchema")
     assert PydanticUser.schema() == {
-        "title": "PydanticUser",
+        "title": "PydanticUserSchema",
         "type": "object",
         "properties": {
             "id": {"title": "Id", "type": "integer"},
@@ -113,7 +113,7 @@ def test_schema() -> None:
         "required": ["id"],
     }
     assert PydanticAddress.schema() == {
-        "title": "PydanticAddress",
+        "title": "PydanticAddressSchema",
         "type": "object",
         "properties": {
             "id": {"title": "Id", "type": "integer"},
@@ -191,3 +191,35 @@ def test_exclude() -> None:
             {"email_address": "eddy@example.com", "id": 2},
         ],
     }
+def test_relations() -> None:
+    PydanticUser = sqlalchemy_to_pydantic(User, name="PydanticUserRelation",include=("id","name","addresses","addresses.email_address"),depth=1)
+    PydanticAddress = sqlalchemy_to_pydantic(Address, name="PydanticAddressRelation")
+
+    user = db.query(User).options(joinedload(User.addresses)).first()
+    pydantic_user = PydanticUser.from_orm(user)
+    data = pydantic_user.dict()
+    check_data = data.copy()
+    assert check_data == {
+        "id": 1,
+        "name": "ed",
+        "addresses": [
+            {"email_address": "ed@example.com", "id": 1, "user_id": 1},
+            {"email_address": "eddy@example.com", "id": 2, "user_id": 1},
+        ],
+    }
+    # pydantic_user_with_addresses = PydanticUserWithAddresses.from_orm(user)
+    # data = pydantic_user_with_addresses.dict()
+    # check_data = data.copy()
+    # del check_data["updated"]
+    # del check_data["created"]
+    # assert check_data == {
+    #     "fullname": "Ed Jones",
+    #     "id": 1,
+    #     "name": "ed",
+    #     "nickname": "edsnickname",
+    #     "addresses": [
+    #         {"email_address": "ed@example.com", "id": 1, "user_id": 1},
+    #         {"email_address": "eddy@example.com", "id": 2, "user_id": 1},
+    #     ],
+    # }
+
