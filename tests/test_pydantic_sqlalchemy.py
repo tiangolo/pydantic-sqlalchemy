@@ -43,7 +43,6 @@ class Address(Base):
 
 Base.metadata.create_all(engine)
 
-
 LocalSession = sessionmaker(bind=engine)
 
 db: Session = LocalSession()
@@ -210,10 +209,17 @@ def test_relations() -> None:
         ),
         depth=1,
     )
-    # PydanticAddress = sqlalchemy_to_pydantic(Address, name="PydanticAddressRelation")
-
+    PydanticAddress = sqlalchemy_to_pydantic(
+        Address,
+        name="PydanticAddressRelation",
+        exclude=("user.created", "user.updated"),
+        depth=2,
+    )
     user = db.query(User).options(joinedload(User.addresses)).first()
+    addresses = db.query(Address).options(joinedload(Address.user))
     pydantic_user = PydanticUser.from_orm(user)
+    pydantic_addresses = [PydanticAddress.from_orm(address) for address in addresses]
+    address_data = [i.dict() for i in pydantic_addresses]
     data = pydantic_user.dict()
     check_data = data.copy()
     assert check_data == {
@@ -224,6 +230,30 @@ def test_relations() -> None:
             {"email_address": "eddy@example.com", "id": 2, "user_id": 1},
         ],
     }
+    assert address_data.copy() == [
+        {
+            "email_address": "ed@example.com",
+            "id": 1,
+            "user_id": 1,
+            "user": {
+                "id": 1,
+                "name": "ed",
+                "fullname": "Ed Jones",
+                "nickname": "edsnickname",
+            },
+        },
+        {
+            "email_address": "eddy@example.com",
+            "id": 2,
+            "user_id": 1,
+            "user": {
+                "id": 1,
+                "name": "ed",
+                "fullname": "Ed Jones",
+                "nickname": "edsnickname",
+            },
+        },
+    ]
     user2 = (
         db.query(User)
         .filter(User.name == "noo")
@@ -233,7 +263,6 @@ def test_relations() -> None:
     pydantic_user2 = PydanticUser.from_orm(user2)
     data2 = pydantic_user2.dict()
     check_data2 = data2.copy()
-    print(check_data2)
     assert check_data2 == {
         "id": 2,
         "name": "noo",

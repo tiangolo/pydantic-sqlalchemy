@@ -15,8 +15,7 @@ class OrmConfig(BaseConfig):
 
 
 def get_field_attr(attr: ColumnProperty) -> Any:
-    if not attr.columns:
-        raise ValueError("attr.columns can't be None")
+    assert len(attr.columns) == 1
     column = attr.columns[0]
     python_type: Optional[type] = None
     if hasattr(column.type, "impl"):
@@ -66,7 +65,7 @@ def _sqlalchemy_to_pydantic(
                     if exclude:
                         subexclude = [
                             i.replace(model_field.key + ".", "")
-                            for i in include
+                            for i in exclude
                             if i.startswith(model_field.key + ".")
                         ]
                     else:
