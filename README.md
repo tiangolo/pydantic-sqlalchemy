@@ -9,8 +9,8 @@
 <a href="https://codecov.io/gh/Chise1/pydantic-sqlalchemy" target="_blank">
     <img src="https://img.shields.io/codecov/c/github/Chise1/pydantic-sqlalchemy?color=%2334D058" alt="Coverage">
 </a>
-<a href="https://pypi.org/project/pydantic-sqlalchemy" target="_blank">
-    <img src="https://img.shields.io/pypi/v/pydantic-sqlalchemy?color=%2334D058&label=pypi%20package" alt="Package version">
+<a href="https://pypi.org/project/sqlalchemy-dantic" target="_blank">
+    <img src="https://img.shields.io/pypi/v/sqlalchemy-dantic?color=%2334D058&label=pypi%20package" alt="Package version">
 </a>
 
 Tools to generate Pydantic models from SQLAlchemy models.
@@ -24,7 +24,7 @@ Quick example:
 ```Python
 from typing import List
 
-from pydantic_sqlalchemy import sqlalchemy_to_pydantic
+from sqlalchemy_dantic import sqlalchemy_to_pydantic
 from sqlalchemy import Column, ForeignKey, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, relationship, sessionmaker
@@ -80,7 +80,7 @@ db.add(ed_user)
 db.commit()
 
 
-def test_pydantic_sqlalchemy():
+def test_sqlalchemy_dantic():
     user = db.query(User).first()
     pydantic_user = PydanticUser.from_orm(user)
     data = pydantic_user.dict()

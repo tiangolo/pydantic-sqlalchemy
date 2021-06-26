@@ -2,10 +2,10 @@ from datetime import datetime, timezone
 from typing import List
 
 import pytest
-from pydantic_sqlalchemy import sqlalchemy_to_pydantic
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, joinedload, relationship, sessionmaker
+from sqlalchemy_dantic import sqlalchemy_to_pydantic
 from sqlalchemy_utc import UtcDateTime
 
 Base = declarative_base()

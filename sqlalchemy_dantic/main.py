@@ -1,10 +1,20 @@
 from copy import copy
-from typing import Any, Dict, Iterable, List, Optional, Set, Tuple, Type
+from typing import Any
+from typing import Dict
+from typing import Iterable
+from typing import List
+from typing import Optional
+from typing import Set
+from typing import Tuple
+from typing import Type
 
-from pydantic import BaseConfig, BaseModel, create_model
+from pydantic import BaseConfig
+from pydantic import BaseModel
+from pydantic import create_model
 from sqlalchemy.inspection import inspect
 from sqlalchemy.orm.mapper import Mapper
-from sqlalchemy.orm.properties import ColumnProperty, RelationshipProperty
+from sqlalchemy.orm.properties import ColumnProperty
+from sqlalchemy.orm.properties import RelationshipProperty
 from sqlalchemy.util import ImmutableProperties
 
 _schema_cache: Set[str] = set()
