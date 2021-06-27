@@ -3,9 +3,6 @@
 <a href="https://github.com/Chise1/pydantic-sqlalchemy/actions?query=workflow%3ATest" target="_blank">
     <img src="https://github.com/Chise1/pydantic-sqlalchemy/workflows/Test/badge.svg" alt="Test">
 </a>
-<a href="https://github.com/Chise1/pydantic-sqlalchemy/actions?query=workflow%3APublish" target="_blank">
-    <img src="https://github.com/Chise1/pydantic-sqlalchemy/workflows/Publish/badge.svg" alt="Publish">
-</a>
 <a href="https://codecov.io/gh/Chise1/pydantic-sqlalchemy" target="_blank">
     <img src="https://img.shields.io/codecov/c/github/Chise1/pydantic-sqlalchemy?color=%2334D058" alt="Coverage">
 </a>

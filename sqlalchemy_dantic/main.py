@@ -7,7 +7,6 @@ from typing import Optional
 from typing import Set
 from typing import Tuple
 from typing import Type
-
 from pydantic import BaseConfig
 from pydantic import BaseModel
 from pydantic import create_model
@@ -46,11 +45,12 @@ def _sqlalchemy_to_pydantic(
     exclude: Iterable[str],
     schema_name: str,
     depth: int,
-    father_db_names: List[str],
+    father_db_names: Set[str],
     config: Type = OrmConfig,
 ) -> Type[BaseModel]:
     fields: Dict[str, Tuple[Any, Any]] = {}
-    father_db_names.append(mapper.class_.__name__)
+    next_db_names=copy(father_db_names)
+    next_db_names.add(mapper.class_.__name__)
     model_fields: ImmutableProperties = mapper.attrs  # type: ignore
     for model_field in model_fields:
         if (
@@ -62,7 +62,7 @@ def _sqlalchemy_to_pydantic(
                 if depth <= 0:
                     continue
                 else:
-                    if model_field.mapper.class_.__name__ in father_db_names:
+                    if model_field.mapper.class_.__name__ in next_db_names:
                         continue
                     if include:
                         subinclude = [
@@ -86,7 +86,7 @@ def _sqlalchemy_to_pydantic(
                         subexclude,
                         schema_name + "." + model_field.key,
                         depth - 1,
-                        father_db_names,
+                        next_db_names,
                         config,
                     )
                     if model_field.uselist:
@@ -115,6 +115,17 @@ def sqlalchemy_to_pydantic(
     exclude: Optional[Iterable[str]] = None,
     depth: int = 0,
 ) -> Type[BaseModel]:
+    """
+    create a Pydantic Mode Type by model.
+    Your model's relation can't be a loop.
+    :param db_model:a sqlalchemy's model.
+    :param name: your creating model name. You can't use the same name twice.(It would got an error in fastapi's openapi html.)
+    :param config: Pydantic's config model.
+    :param include: Your needed field. If you need relation's model(like one_to_many or many_to_many),you can write:`field_name`.`model_name`
+    :param exclude: You can't use between include and exclude.
+    :param depth:
+    :return:
+    """
     if name in _schema_cache:
         raise AttributeError("Can't create the same name model twice.")
     if include and exclude:
@@ -124,6 +135,6 @@ def sqlalchemy_to_pydantic(
     if not exclude:
         exclude = []
     mapper = inspect(db_model)
-    schema = _sqlalchemy_to_pydantic(mapper, include, exclude, name, depth, [], config)
+    schema = _sqlalchemy_to_pydantic(mapper, include, exclude, name, depth, set(), config)
     _schema_cache.add(name)
     return schema
