@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sqlalchemy-dantic"
-version = "0.1.1"
+version = "0.2.0"
 description = "Tools to convert SQLAlchemy models to Pydantic models.Thanks project 'pydantic-sqlalchemy'."
 authors = ["Chise1 <chise123@live.com>"]
 license = "MIT"

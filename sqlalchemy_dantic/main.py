@@ -7,8 +7,10 @@ from typing import Optional
 from typing import Set
 from typing import Tuple
 from typing import Type
+
 from pydantic import BaseConfig
 from pydantic import BaseModel
+from pydantic import Field
 from pydantic import create_model
 from sqlalchemy.inspection import inspect
 from sqlalchemy.orm.mapper import Mapper
@@ -27,6 +29,7 @@ def get_field_attr(attr: ColumnProperty) -> Any:
     assert len(attr.columns) == 1
     column = attr.columns[0]
     python_type: Optional[type] = None
+    description = column.comment
     if hasattr(column.type, "impl"):
         if hasattr(column.type.impl, "python_type"):
             python_type = column.type.impl.python_type
@@ -36,7 +39,13 @@ def get_field_attr(attr: ColumnProperty) -> Any:
     default = None
     if column.default is None and not column.nullable:
         default = ...
-    return python_type, default
+    if hasattr(column.type, "length"):
+        return (
+            python_type,
+            Field(default, description=description, max_length=column.type.length),
+        )
+    else:
+        return python_type, Field(default, description=description,)
 
 
 def _sqlalchemy_to_pydantic(
@@ -49,7 +58,7 @@ def _sqlalchemy_to_pydantic(
     config: Type = OrmConfig,
 ) -> Type[BaseModel]:
     fields: Dict[str, Tuple[Any, Any]] = {}
-    next_db_names=copy(father_db_names)
+    next_db_names = copy(father_db_names)
     next_db_names.add(mapper.class_.__name__)
     model_fields: ImmutableProperties = mapper.attrs  # type: ignore
     for model_field in model_fields:
@@ -135,6 +144,8 @@ def sqlalchemy_to_pydantic(
     if not exclude:
         exclude = []
     mapper = inspect(db_model)
-    schema = _sqlalchemy_to_pydantic(mapper, include, exclude, name, depth, set(), config)
+    schema = _sqlalchemy_to_pydantic(
+        mapper, include, exclude, name, depth, set(), config
+    )
     _schema_cache.add(name)
     return schema

@@ -13,6 +13,10 @@
 Tools to generate Pydantic models from SQLAlchemy models.
 
 Still experimental.
+## Install
+```shell script
+pip3 install sqlalchemy-dantic
+```
 
 ## How to use
 

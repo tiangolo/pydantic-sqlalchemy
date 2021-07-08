@@ -21,7 +21,7 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
+    name = Column(String(32), comment="name")
     fullname = Column(String)
     nickname = Column(String)
     created = Column(DateTime, default=datetime.utcnow)
@@ -101,12 +101,18 @@ def test_defaults() -> None:
 def test_schema() -> None:
     PydanticUser = sqlalchemy_to_pydantic(User, name="PydanticUserSchema")
     PydanticAddress = sqlalchemy_to_pydantic(Address, name="PydanticAddressSchema")
+    print(PydanticUser.schema())
     assert PydanticUser.schema() == {
         "title": "PydanticUserSchema",
         "type": "object",
         "properties": {
             "id": {"title": "Id", "type": "integer"},
-            "name": {"title": "Name", "type": "string"},
+            "name": {
+                "title": "Name",
+                "description": "name",
+                "maxLength": 32,
+                "type": "string",
+            },
             "fullname": {"title": "Fullname", "type": "string"},
             "nickname": {"title": "Nickname", "type": "string"},
             "created": {"title": "Created", "type": "string", "format": "date-time"},
