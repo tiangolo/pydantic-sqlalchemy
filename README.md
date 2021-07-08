@@ -1,21 +1,22 @@
 # Pydantic-SQLAlchemy
 
-<a href="https://github.com/tiangolo/pydantic-sqlalchemy/actions?query=workflow%3ATest" target="_blank">
-    <img src="https://github.com/tiangolo/pydantic-sqlalchemy/workflows/Test/badge.svg" alt="Test">
+<a href="https://github.com/Chise1/pydantic-sqlalchemy/actions?query=workflow%3ATest" target="_blank">
+    <img src="https://github.com/Chise1/pydantic-sqlalchemy/workflows/Test/badge.svg" alt="Test">
 </a>
-<a href="https://github.com/tiangolo/pydantic-sqlalchemy/actions?query=workflow%3APublish" target="_blank">
-    <img src="https://github.com/tiangolo/pydantic-sqlalchemy/workflows/Publish/badge.svg" alt="Publish">
+<a href="https://codecov.io/gh/Chise1/pydantic-sqlalchemy" target="_blank">
+    <img src="https://img.shields.io/codecov/c/github/Chise1/pydantic-sqlalchemy?color=%2334D058" alt="Coverage">
 </a>
-<a href="https://codecov.io/gh/tiangolo/pydantic-sqlalchemy" target="_blank">
-    <img src="https://img.shields.io/codecov/c/github/tiangolo/pydantic-sqlalchemy?color=%2334D058" alt="Coverage">
-</a>
-<a href="https://pypi.org/project/pydantic-sqlalchemy" target="_blank">
-    <img src="https://img.shields.io/pypi/v/pydantic-sqlalchemy?color=%2334D058&label=pypi%20package" alt="Package version">
+<a href="https://pypi.org/project/sqlalchemy-dantic" target="_blank">
+    <img src="https://img.shields.io/pypi/v/sqlalchemy-dantic?color=%2334D058&label=pypi%20package" alt="Package version">
 </a>
 
 Tools to generate Pydantic models from SQLAlchemy models.
 
 Still experimental.
+## Install
+```shell script
+pip3 install sqlalchemy-dantic
+```
 
 ## How to use
 
@@ -24,7 +25,7 @@ Quick example:
 ```Python
 from typing import List
 
-from pydantic_sqlalchemy import sqlalchemy_to_pydantic
+from sqlalchemy_dantic import sqlalchemy_to_pydantic
 from sqlalchemy import Column, ForeignKey, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, relationship, sessionmaker
@@ -56,8 +57,8 @@ class Address(Base):
     user = relationship("User", back_populates="addresses")
 
 
-PydanticUser = sqlalchemy_to_pydantic(User)
-PydanticAddress = sqlalchemy_to_pydantic(Address)
+PydanticUser = sqlalchemy_to_pydantic(User,name="PydanticUser")
+PydanticAddress = sqlalchemy_to_pydantic(Address,name="PydanticAddress")
 
 
 class PydanticUserWithAddresses(PydanticUser):
@@ -80,7 +81,7 @@ db.add(ed_user)
 db.commit()
 
 
-def test_pydantic_sqlalchemy():
+def test_sqlalchemy_dantic():
     user = db.query(User).first()
     pydantic_user = PydanticUser.from_orm(user)
     data = pydantic_user.dict()
@@ -105,46 +106,7 @@ def test_pydantic_sqlalchemy():
 ```
 
 ## Release Notes
-
-### Latest Changes
-
-
-### 0.0.9
-
-* ✨ Add `poetry-version-plugin`, remove `importlib-metadata` dependency. PR [#32](https://github.com/tiangolo/pydantic-sqlalchemy/pull/32) by [@tiangolo](https://github.com/tiangolo).
-
-### 0.0.8.post1
-
-* 💚 Fix setting up Poetry for GitHub Action Publish. PR [#23](https://github.com/tiangolo/pydantic-sqlalchemy/pull/23) by [@tiangolo](https://github.com/tiangolo).
-
-### 0.0.8
-
-* ⬆️ Upgrade `importlib-metadata` to 3.0.0. PR [#22](https://github.com/tiangolo/pydantic-sqlalchemy/pull/22) by [@tiangolo](https://github.com/tiangolo).
-* 👷 Add GitHub Action latest-changes. PR [#20](https://github.com/tiangolo/pydantic-sqlalchemy/pull/20) by [@tiangolo](https://github.com/tiangolo).
-* 💚 Fix GitHub Actions Poetry setup. PR [#21](https://github.com/tiangolo/pydantic-sqlalchemy/pull/21) by [@tiangolo](https://github.com/tiangolo).
-
-### 0.0.7
-
-* Update requirements of `importlib-metadata` to support the latest version `2.0.0`. PR [#11](https://github.com/tiangolo/pydantic-sqlalchemy/pull/11).
-
-### 0.0.6
-
-* Add support for SQLAlchemy extended types like [sqlalchemy-utc: UtcDateTime](https://github.com/spoqa/sqlalchemy-utc). PR [#9](https://github.com/tiangolo/pydantic-sqlalchemy/pull/9).
-
-### 0.0.5
-
-* Exclude columns before checking their Python types. PR [#5](https://github.com/tiangolo/pydantic-sqlalchemy/pull/5) by [@ZachMyers3](https://github.com/ZachMyers3).
-
-### 0.0.4
-
-* Do not include SQLAlchemy defaults in Pydantic models. PR [#4](https://github.com/tiangolo/pydantic-sqlalchemy/pull/4).
-
-### 0.0.3
-
-* Add support for `exclude` to exclude columns from Pydantic model. PR [#3](https://github.com/tiangolo/pydantic-sqlalchemy/pull/3).
-* Add support for overriding the Pydantic `config`. PR [#1](https://github.com/tiangolo/pydantic-sqlalchemy/pull/1) by [@pyropy](https://github.com/pyropy).
-* Add CI with GitHub Actions. PR [#2](https://github.com/tiangolo/pydantic-sqlalchemy/pull/2).
-
+### add sub Schema .
 ## License
 
 This project is licensed under the terms of the MIT license.
