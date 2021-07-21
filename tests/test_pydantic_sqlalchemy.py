@@ -1,11 +1,12 @@
 from datetime import datetime, timezone
 from typing import List
 
-from pydantic_sqlalchemy import sqlalchemy_to_pydantic
+from pydantic_sqlalchemy import sqlalchemy_to_pydantic, sqlalchemy_select_to_pydantic
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, relationship, sessionmaker
 from sqlalchemy_utc import UtcDateTime
+from sqlalchemy.future import select
 
 Base = declarative_base()
 
@@ -20,7 +21,7 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
+    name = Column(String, comment="username")
     fullname = Column(String)
     nickname = Column(String)
     created = Column(DateTime, default=datetime.utcnow)
@@ -104,7 +105,7 @@ def test_schema() -> None:
         "type": "object",
         "properties": {
             "id": {"title": "Id", "type": "integer"},
-            "name": {"title": "Name", "type": "string"},
+            "name": {"title": "Name", "type": "string", "description": "username"},
             "fullname": {"title": "Fullname", "type": "string"},
             "nickname": {"title": "Nickname", "type": "string"},
             "created": {"title": "Created", "type": "string", "format": "date-time"},
@@ -185,3 +186,51 @@ def test_exclude() -> None:
             {"email_address": "eddy@example.com", "id": 2},
         ],
     }
+
+
+def test_select_query():
+    sql = (
+        select(User.id, User.name, Address.id.label("addr_id"), Address.email_address)
+        .outerjoin(Address)
+        .filter_by(id=1)
+        .order_by(User.id.asc(), Address.id.asc())
+    )
+    schema = sqlalchemy_select_to_pydantic("PydanticUserWithAddresses", sql)
+    user = db.execute(sql).first()
+    data = schema.from_orm(user)
+    check_data = dict(data)
+    assert check_data == {
+        "id": 1,
+        "name": "ed",
+        "addr_id": 1,
+        "email_address": "ed@example.com",
+    }
+
+
+def test_select_query_schema() -> None:
+    sql = (
+        select(User.id, User.name, Address.id.label("addr_id"), Address.email_address)
+        .outerjoin(Address)
+        .filter_by(id=1)
+        .order_by(User.id.asc(), Address.id.asc())
+    )
+    schema = sqlalchemy_select_to_pydantic("PydanticUserWithAddresses", sql)
+    assert schema.schema() == {
+        "title": "PydanticUserWithAddresses",
+        "type": "object",
+        "properties": {
+            "id": {"title": "Id", "type": "integer"},
+            "name": {"title": "Name", "type": "string", "description": "username"},
+            "addr_id": {"title": "Addr Id", "type": "integer"},
+            "email_address": {"title": "Email Address", "type": "string"},
+        },
+        "required": ["id", "addr_id", "email_address"],
+    }
+
+
+# def main():
+#     test_select_query()
+
+
+# if __name__ == "__main__":
+#     main()
