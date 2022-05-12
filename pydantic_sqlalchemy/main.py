@@ -2,12 +2,16 @@ from typing import Container, Optional, Type
 
 from pydantic import BaseConfig, BaseModel, create_model
 from sqlalchemy.inspection import inspect
-from sqlalchemy.orm.properties import ColumnProperty
+from sqlalchemy.orm.interfaces import MANYTOONE, MANYTOMANY, ONETOMANY
+from sqlalchemy.orm.properties import ColumnProperty, RelationshipProperty
 
 
 class OrmConfig(BaseConfig):
     orm_mode = True
 
+# def sqlalchemy_to_pydantic(
+#     db_model: Type, *, config: Type = OrmConfig, exclude: Container[str] = []
+# ) -> Type[BaseModel]:
 
 def sqlalchemy_to_pydantic(
     db_model: Type, *, config: Type = OrmConfig, exclude: Container[str] = []
@@ -15,7 +19,16 @@ def sqlalchemy_to_pydantic(
     mapper = inspect(db_model)
     fields = {}
     for attr in mapper.attrs:
-        if isinstance(attr, ColumnProperty):
+        if isinstance(attr, RelationshipProperty):
+            if attr.direction == MANYTOMANY:
+                print('MANYTOMANY!', attr)
+            elif attr.direction == MANYTOONE:  #
+                print('MANY_TO_ONE!', attr)
+            elif attr.direction == ONETOMANY:  # user.addresses
+                print('ONE_TO_MANY!', attr)
+            else:
+                print(attr.direction, attr)
+        elif isinstance(attr, ColumnProperty):
             if attr.columns:
                 name = attr.key
                 if name in exclude:
