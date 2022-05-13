@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List
 
-from pydantic_sqlalchemy import sqlalchemy_to_pydantic
+from pydantic_sqlalchemy import extract_from_sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -28,8 +28,8 @@ db.commit()
 
 
 def test_defaults() -> None:
-    PydanticUser = sqlalchemy_to_pydantic(User)
-    PydanticAddress = sqlalchemy_to_pydantic(Address)
+    PydanticUser = extract_from_sqlalchemy(User)
+    PydanticAddress = extract_from_sqlalchemy(Address)
 
     class PydanticUserWithAddresses(PydanticUser):
         addresses: List[PydanticAddress] = []
@@ -68,8 +68,8 @@ def test_defaults() -> None:
 
 
 def test_schema() -> None:
-    PydanticUser = sqlalchemy_to_pydantic(User)
-    PydanticAddress = sqlalchemy_to_pydantic(Address)
+    PydanticUser = extract_from_sqlalchemy(User)
+    PydanticAddress = extract_from_sqlalchemy(Address)
     assert PydanticUser.schema() == {
         "title": "User",
         "type": "object",
@@ -106,8 +106,8 @@ def test_config() -> None:
             camel_case = pascal_case[0].lower() + pascal_case[1:]
             return camel_case
 
-    PydanticUser = sqlalchemy_to_pydantic(User)
-    PydanticAddress = sqlalchemy_to_pydantic(Address, config=Config)
+    PydanticUser = extract_from_sqlalchemy(User)
+    PydanticAddress = extract_from_sqlalchemy(Address, config=Config)
 
     class PydanticUserWithAddresses(PydanticUser):
         addresses: List[PydanticAddress] = []
@@ -133,8 +133,8 @@ def test_config() -> None:
 
 
 def test_exclude() -> None:
-    PydanticUser = sqlalchemy_to_pydantic(User, exclude={"nickname"})
-    PydanticAddress = sqlalchemy_to_pydantic(Address, exclude={"user_id"})
+    PydanticUser = extract_from_sqlalchemy(User, exclude={"nickname"})
+    PydanticAddress = extract_from_sqlalchemy(Address, exclude={"user_id"})
 
     class PydanticUserWithAddresses(PydanticUser):
         addresses: List[PydanticAddress] = []

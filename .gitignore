@@ -7,3 +7,7 @@ dist
 coverage.xml
 htmlcov
 .idea
+
+build
+
+.python-version

@@ -24,7 +24,7 @@ Quick example:
 ```Python
 from typing import List
 
-from pydantic_sqlalchemy import sqlalchemy_to_pydantic
+from pydantic_sqlalchemy import extract_from_sqlalchemy
 from sqlalchemy import Column, ForeignKey, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, relationship, sessionmaker
@@ -56,8 +56,8 @@ class Address(Base):
     user = relationship("User", back_populates="addresses")
 
 
-PydanticUser = sqlalchemy_to_pydantic(User)
-PydanticAddress = sqlalchemy_to_pydantic(Address)
+PydanticUser = extract_from_sqlalchemy(User)
+PydanticAddress = extract_from_sqlalchemy(Address)
 
 
 class PydanticUserWithAddresses(PydanticUser):
@@ -65,7 +65,6 @@ class PydanticUserWithAddresses(PydanticUser):
 
 
 Base.metadata.create_all(engine)
-
 
 LocalSession = sessionmaker(bind=engine)
 
