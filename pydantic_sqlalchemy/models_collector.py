@@ -30,6 +30,9 @@ class ModelsCollector:
     def write_to_dir(self):
         ...
 
+    def override_fields(self, raw_model: Type, fields: ...):
+        ...
+
     def collect(self, raw_model: Type):
         self.queue_raw.append(raw_model)
         while True:
