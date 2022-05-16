@@ -2,7 +2,7 @@ from pydantic_sqlalchemy.models_collector import ModelsCollector
 
 def ensure_file_module_path(
 
-)
+):
 
 def write_pydantic_models(
         collector: ModelsCollector,

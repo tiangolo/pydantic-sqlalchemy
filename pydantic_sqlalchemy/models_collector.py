@@ -4,7 +4,7 @@ from queue import Queue
 from typing import Type, NewType, Dict, Set, Deque, List
 
 from pydantic_sqlalchemy import extract_from_sqlalchemy
-from pydantic_sqlalchemy.extract_from_sqlalchemy import ExtractedModel
+from pydantic_sqlalchemy.extract_from_sqlalchemy import ExtractedModel, GeneratedImportReference
 
 FilePathType = NewType('FilePathType', str)
 
@@ -47,7 +47,9 @@ class ModelsCollector:
                 result = extract_from_sqlalchemy(elem)
                 self.extracted_models.add(result)
                 for dep in result.depends_on:
-                    print("Appending: ", dep)
-                    self.queue_raw.append(dep)
+                    if isinstance(dep, GeneratedImportReference):
+                        self.queue_raw.append(dep.original)
+                    else:
+                        self.queue_raw.append(dep)
         return result
 
