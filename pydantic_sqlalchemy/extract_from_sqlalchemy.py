@@ -1,37 +1,45 @@
 from dataclasses import dataclass, field
-import inspect
-from typing import Container, Optional, Type, Dict, Set, Any, List, Union
+from datetime import datetime
+from typing import Container, Optional, Type, Dict, Set, Any, Union
 
+from sqlalchemy import (
+    Enum as SQLAlchemyEnum,
+    Date as SQLAlchemyDate,
+)
 from sqlalchemy.inspection import inspect as inspect_sqlalchemy_model
 from sqlalchemy.orm import CompositeProperty
 from sqlalchemy.orm.interfaces import MANYTOONE, MANYTOMANY, ONETOMANY
 from sqlalchemy.orm.properties import ColumnProperty, RelationshipProperty
 from sqlalchemy.sql.type_api import UserDefinedType
 
+from pydantic_sqlalchemy.module_path_typ import ModulePathType
+
 
 @dataclass
 class GeneratedImportReference:
-    path: List[str]
+    module_path: ModulePathType
     name: str
     original: Type
 
     def __hash__(self):
-        return hash(".".join(self.path)) + hash(self.name)
+        return hash(".".join(self.module_path)) + hash(self.name)
 
     @staticmethod
     def from_raw(raw: Type):
-        module = inspect.getmodule(raw)
-        print(module)
+        # module_path = ModulePathType(module.__path__) if module is not None else None
         return GeneratedImportReference(
-            path=[],
+            module_path=ModulePathType(raw.__module__),
             name=raw.__name__,
             original=raw,
         )
 
+
 @dataclass
 class ExtractedField:
-    typ: Union[Type, GeneratedImportReference]
-    default: Any
+    typ: Union[Type, GeneratedImportReference, SQLAlchemyEnum]
+    is_nullable: bool
+    is_array: bool
+    default: Any = None
     pass
 
 
@@ -39,6 +47,7 @@ class ExtractedField:
 class ExtractedModel:
     # depends_on: pass
     original_cls: Type
+    ref: GeneratedImportReference
     fields: Dict[str, ExtractedField] = field(default_factory=dict)
     depends_on: Set[Union[Type, GeneratedImportReference]] = field(default_factory=set)
 
@@ -56,33 +65,40 @@ class ExtractedModel:
 def extract_from_sqlalchemy(
     db_model: Type, *, exclude: Container[str] = []
 ):
-    print("Inspecting: ", db_model)
     mapper = inspect_sqlalchemy_model(db_model)
-    to_return = ExtractedModel(db_model)
+    to_return = ExtractedModel(
+        original_cls=db_model,
+        ref=GeneratedImportReference.from_raw(db_model),
+    )
     for attr in mapper.attrs:
         if isinstance(attr, RelationshipProperty):
             model_class = attr.entity.class_
             print('GOT model_class: ', model_class)
+            ref = GeneratedImportReference.from_raw(model_class)
             if model_class != db_model:
                 to_return.depends_on\
-                    .add(GeneratedImportReference.from_raw(model_class))
-
+                    .add(ref)
+            name = attr.key
             if attr.direction == MANYTOMANY:
-                print('MANYTOMANY!', attr)
+                to_return.fields[name] = ExtractedField(ref, is_array=True, is_nullable=False, default=None)
             elif attr.direction == MANYTOONE:  #
-                print('MANY_TO_ONE!', attr)
+                to_return.fields[name] = ExtractedField(ref, is_array=False, is_nullable=False, default=None)
             elif attr.direction == ONETOMANY:  # user.addresses
-                print('ONE_TO_MANY!', attr)
+                to_return.fields[name] = ExtractedField(ref, is_array=True, is_nullable=True, default=None)
             else:
-                print(attr.direction, attr)
+                print("NOT PROCESSED: ", attr.direction, attr)
         elif isinstance(attr, ColumnProperty):
             if attr.columns:
                 name = attr.key
                 if name in exclude:
                     continue
                 column = attr.columns[0]
-                python_type: Optional[type] = None
-                if hasattr(column.type, "impl"):
+                python_type: Union[type, None] = None
+                if isinstance(column.type, SQLAlchemyEnum):
+                    python_type = column.type
+                elif isinstance(column.type, SQLAlchemyDate):
+                    python_type = datetime
+                elif hasattr(column.type, "impl"):
                     if hasattr(column.type.impl, "python_type"):
                         python_type = column.type.impl.python_type
                 elif isinstance(column.type, UserDefinedType):
@@ -90,10 +106,13 @@ def extract_from_sqlalchemy(
                 elif hasattr(column.type, "python_type"):
                         python_type = column.type.python_type
                 assert python_type, f"Could not infer python_type for {column}"
-                default = None
-                if column.default is None and not column.nullable:
-                    default = ...
-                to_return.fields[name] = ExtractedField(python_type, default)
+                default = ... if column.default is None else column.default
+                to_return.fields[name] = ExtractedField(
+                    typ=python_type,
+                    is_array=False,
+                    is_nullable=column.nullable,
+                    default=default,
+                )
         elif isinstance(attr, CompositeProperty):
             # FIXME
             print("Composite property!", attr)

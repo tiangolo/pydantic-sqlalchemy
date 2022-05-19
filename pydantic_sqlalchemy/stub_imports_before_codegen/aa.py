@@ -1,36 +1,7 @@
-from pydantic_sqlalchemy.stub_imports_before_codegen.import_stubber_finder import ImportStubberFinder
-from pydantic_sqlalchemy.stub_imports_before_codegen.import_stubber_loader import ImportStubberLoader
-
-import sys
-
-
-class DependencyInjector:
-    """
-    Convenience wrapper for DependencyInjectorLoader and DependencyInjectorFinder.
-    """
-
-    def __init__(self):
-        self._loader = ImportStubberLoader()
-        self._finder = ImportStubberFinder(self._loader)
-
-    def install(self):
-        sys.meta_path.append(self._finder)
-
-    def provide(self, service_name, module):
-        self._loader.provide(service_name, module)
-
-
-class FrontendModule:
-    class Popup:
-        def __init__(self, message):
-            self._message = message
-
-        def display(self):
-            print("Popup:", self._message)
-
+from pydantic_sqlalchemy.stub_imports_before_codegen.import_stubber_installer import ImportStubberInstaller
 
 if __name__ == '__main__':
-    injector = DependencyInjector()
+    injector = ImportStubberInstaller()
     injector.install()
 
     print('!!importing!')

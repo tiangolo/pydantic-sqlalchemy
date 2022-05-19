@@ -1,28 +1,25 @@
-from collections import deque
 from dataclasses import dataclass, field
-from queue import Queue
-from typing import Type, NewType, Dict, Set, Deque, List
+from dataclasses import dataclass, field
+from typing import Type, NewType, Dict, Set, List
 
 from pydantic_sqlalchemy import extract_from_sqlalchemy
-from pydantic_sqlalchemy.extract_from_sqlalchemy import ExtractedModel, GeneratedImportReference
-
-FilePathType = NewType('FilePathType', str)
-
-CollectedFileRefType = NewType('CollectedModelRefType', str)
+from pydantic_sqlalchemy.extract_from_sqlalchemy import GeneratedImportReference, ExtractedModel
+from pydantic_sqlalchemy.module_path_typ import ModulePathType, get_module_path
 
 
 @dataclass
 class CollectedFile:
-    file_path: str
-    imports: Set[CollectedFileRefType] = field(default_factory=set)
+    module: ModulePathType
+    models: Set[ExtractedModel] = field(default_factory=set)
+    imports: Set[GeneratedImportReference] = field(default_factory=set)
 
 
 @dataclass
 class ModelsCollector:
-    collected_models: Dict[CollectedFileRefType, CollectedFile] = field(default_factory=dict)
+    collected_files: Dict[ModulePathType, CollectedFile] = field(default_factory=dict)
     visited_raw: Set[Type] = field(default_factory=set)
     queue_raw: List[Type] = field(default_factory=list)
-    extracted_models: Set[ExtractedModel] = field(default_factory=set)
+    # extracted_models: Set[ExtractedModel] = field(default_factory=set)
 
     def ref_from_sqlalchemy_model(self, model: Type):
         ...
@@ -45,11 +42,19 @@ class ModelsCollector:
             if elem not in self.visited_raw:
                 self.visited_raw.add(elem)
                 result = extract_from_sqlalchemy(elem)
-                self.extracted_models.add(result)
+
+                module_path = get_module_path(elem)
+                collected_file = self.collected_files.get(
+                    module_path,
+                    CollectedFile(module=module_path)
+                )
+                collected_file.models.add(result)
                 for dep in result.depends_on:
                     if isinstance(dep, GeneratedImportReference):
                         self.queue_raw.append(dep.original)
+                        collected_file.imports.add(dep)
                     else:
                         self.queue_raw.append(dep)
-        return result
+                self.collected_files[module_path] = collected_file
+        return self.collected_files
 
