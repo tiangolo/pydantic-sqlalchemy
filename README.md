@@ -17,6 +17,13 @@ Tools to generate Pydantic models from SQLAlchemy models.
 
 Still experimental.
 
+## Installation
+```console
+$ pip install pydantic-sqlalchemy
+
+---> 100%
+```
+
 ## How to use
 
 Quick example:
