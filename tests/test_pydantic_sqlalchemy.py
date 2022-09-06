@@ -185,3 +185,11 @@ def test_exclude() -> None:
             {"email_address": "eddy@example.com", "id": 2},
         ],
     }
+
+
+def test_only() -> None:
+    PydanticUser = sqlalchemy_to_pydantic(User, only={"nickname", "name"})
+    user = db.query(User).first()
+    pydantic_user = PydanticUser.from_orm(user)
+    data = pydantic_user.dict(by_alias=True)
+    assert data == {"nickname": "edsnickname", "name": "ed"}
