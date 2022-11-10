@@ -17,6 +17,16 @@ Tools to generate Pydantic models from SQLAlchemy models.
 
 Still experimental.
 
+## 🚨 DEPRECATION WARNING 🚨
+
+I made this as a first attempt to simplify the work needed to combine SQLAlchemy and Pydantic models, but this only partially solved some of the problems.
+
+After some time, I was able to build what I thought would be the best solution for using and integrating SQLAlchemy with Pydantic: [SQLModel](https://sqlmodel.tiangolo.com/). 🚀
+
+Most of the effort I would put here in this little library, `pydantic-sqlalchemy`, will now go to SQLModel. 🚨
+
+So, if this was in any way useful, go and check out SQLModel, I would expect it to be much better for you than this. 🤓
+
 ## How to use
 
 Quick example:
