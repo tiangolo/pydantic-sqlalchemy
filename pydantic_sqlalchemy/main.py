@@ -1,12 +1,20 @@
 from typing import Container, Optional, Type
 
-from pydantic import BaseConfig, BaseModel, create_model
+from pydantic import BaseModel, create_model
 from sqlalchemy.inspection import inspect
 from sqlalchemy.orm.properties import ColumnProperty
 
 
-class OrmConfig(BaseConfig):
-    orm_mode = True
+try:
+    from pydantic import ConfigDict
+
+    class OrmConfig(ConfigDict):
+        from_attributes = True
+except ImportError:
+    from pydantic import BaseConfig
+
+    class OrmConfig(BaseConfig):
+        orm_mode = True
 
 
 def sqlalchemy_to_pydantic(
