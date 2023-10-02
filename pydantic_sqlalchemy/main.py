@@ -17,9 +17,10 @@ def sqlalchemy_to_pydantic(
     for attr in mapper.attrs:
         if (
             not isinstance(attr, ColumnProperty)
-            or not attr.columns
-            or (name := attr.key) in exclude
-        ):
+            or not attr.columns):
+            continue
+        name = attr.key
+        if name in exclude:
             continue
         column = attr.columns[0]
         python_type: Optional[type] = None
