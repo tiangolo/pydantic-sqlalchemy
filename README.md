@@ -118,6 +118,10 @@ def test_pydantic_sqlalchemy():
 
 ### Latest Changes
 
+#### Docs
+
+* 📝 Add SQLModel docs. PR [#70](https://github.com/tiangolo/pydantic-sqlalchemy/pull/70) by [@tiangolo](https://github.com/tiangolo).
+
 #### Internal
 
 * 👷 Add dependabot. PR [#60](https://github.com/tiangolo/pydantic-sqlalchemy/pull/60) by [@tiangolo](https://github.com/tiangolo).
