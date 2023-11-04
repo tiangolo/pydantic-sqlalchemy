@@ -19,7 +19,7 @@ Still experimental.
 
 ## 🚨 WARNING: Use SQLModel instead 🚨
 
-[SQLModel](https://sqlmodel.tiangolo.com/) is a library that solves the same problem as this one, but in a much better way.
+[SQLModel](https://sqlmodel.tiangolo.com/) is a library that solves the same problem as this one, but in a much better way, also solving several other problems at the same time.
 
 This project was to solve some simple use cases, to generate dynamic Pydantic models from SQLAlchemy models. But the result cannot be used very well in code as it doesn't have all the autocompletion and inline errors that a Pydantic model would have.
 
