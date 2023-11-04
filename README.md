@@ -108,6 +108,9 @@ def test_pydantic_sqlalchemy():
 
 ### Latest Changes
 
+#### Internal
+
+* 👷 Update latest-changes GitHub Action. PR [#59](https://github.com/tiangolo/pydantic-sqlalchemy/pull/59) by [@tiangolo](https://github.com/tiangolo).
 
 ### 0.0.9
 
