@@ -30,7 +30,7 @@ jobs:
       - name: Configure poetry
         run: python -m poetry config virtualenvs.in-project true
       - name: Set up cache
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         id: cache
         with:
           path: .venv
