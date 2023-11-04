@@ -110,6 +110,7 @@ def test_pydantic_sqlalchemy():
 
 #### Internal
 
+* 👷 Add dependabot. PR [#60](https://github.com/tiangolo/pydantic-sqlalchemy/pull/60) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Update latest-changes GitHub Action. PR [#59](https://github.com/tiangolo/pydantic-sqlalchemy/pull/59) by [@tiangolo](https://github.com/tiangolo).
 
 ### 0.0.9
