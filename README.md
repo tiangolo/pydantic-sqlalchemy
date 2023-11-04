@@ -17,6 +17,16 @@ Tools to generate Pydantic models from SQLAlchemy models.
 
 Still experimental.
 
+## 🚨 WARNING: Use SQLModel instead 🚨
+
+[SQLModel](https://sqlmodel.tiangolo.com/) is a library that solves the same problem as this one, but in a much better way.
+
+This project was to solve some simple use cases, to generate dynamic Pydantic models from SQLAlchemy models. But the result cannot be used very well in code as it doesn't have all the autocompletion and inline errors that a Pydantic model would have.
+
+This was a very simple implementation, SQLModel is a much better solution, much better design and work behind it.
+
+For most of the cases where you would use `pydantic-sqlalchemy`, you should use [SQLModel](https://sqlmodel.tiangolo.com/) instead.
+
 ## How to use
 
 Quick example:
