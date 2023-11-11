@@ -20,7 +20,7 @@ flake8 = {version = "^3.7.9", optional = true, extras = ["dev"]}
 [tool.poetry.dev-dependencies]
 mypy = "^0.770"
 black = "^19.10b0"
-isort = "^4.3.21"
+isort = "^5.8.0"
 pytest = "^5.4.1"
 sqlalchemy-stubs = "^0.3"
 pytest-cov = "^2.8.1"
