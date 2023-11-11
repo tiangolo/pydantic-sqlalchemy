@@ -21,7 +21,7 @@ flake8 = {version = "^3.7.9", optional = true, extras = ["dev"]}
 mypy = "^0.770"
 black = "^19.10b0"
 isort = "^4.3.21"
-pytest = "^5.4.1"
+pytest = "^7.0.1"
 sqlalchemy-stubs = "^0.3"
 pytest-cov = "^2.8.1"
 sqlalchemy-utc = "^0.10.0"
