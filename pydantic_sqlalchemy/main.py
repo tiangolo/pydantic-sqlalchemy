@@ -10,7 +10,8 @@ class OrmConfig(BaseConfig):
 
 
 def sqlalchemy_to_pydantic(
-    db_model: Type, *, config: Type = OrmConfig, exclude: Container[str] = []
+    db_model: Type, *, config: Type = OrmConfig, exclude: Container[str] = [],
+        optional: Container[str] = [], all_optional: bool = False
 ) -> Type[BaseModel]:
     mapper = inspect(db_model)
     fields = {}
@@ -29,7 +30,7 @@ def sqlalchemy_to_pydantic(
                     python_type = column.type.python_type
                 assert python_type, f"Could not infer python_type for {column}"
                 default = None
-                if column.default is None and not column.nullable:
+                if not all_optional and name not in optional and column.default is None and not column.nullable:
                     default = ...
                 fields[name] = (python_type, default)
     pydantic_model = create_model(

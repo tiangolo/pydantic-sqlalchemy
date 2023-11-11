@@ -185,3 +185,30 @@ def test_exclude() -> None:
             {"email_address": "eddy@example.com", "id": 2},
         ],
     }
+
+
+def test_all_optional() -> None:
+    PydanticAddressAllOptional = sqlalchemy_to_pydantic(Address, all_optional=True)
+    schema_all_optional = PydanticAddressAllOptional.schema()
+    PydanticAddressEmailAdressOptional = sqlalchemy_to_pydantic(Address, optional=['email_address'])
+    schema_email_address_optional = PydanticAddressEmailAdressOptional.schema()
+
+    assert schema_all_optional == {
+        "title": "Address",
+        "type": "object",
+        "properties": {
+            "id": {"title": "Id", "type": "integer"},
+            "email_address": {"title": "Email Address", "type": "string"},
+            "user_id": {"title": "User Id", "type": "integer"},
+        },
+    }
+    assert schema_email_address_optional == {
+        "title": "Address",
+        "type": "object",
+        "properties": {
+            "id": {"title": "Id", "type": "integer"},
+            "email_address": {"title": "Email Address", "type": "string"},
+            "user_id": {"title": "User Id", "type": "integer"},
+        },
+        "required": ["id"],
+    }
