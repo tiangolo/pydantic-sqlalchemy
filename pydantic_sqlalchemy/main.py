@@ -8,8 +8,7 @@ from sqlalchemy.orm.properties import ColumnProperty
 try:
     from pydantic import ConfigDict
 
-    class OrmConfig(ConfigDict):
-        from_attributes = True
+    OrmConfig = ConfigDict(from_attributes=True)
 except ImportError:
     from pydantic import BaseConfig
 
