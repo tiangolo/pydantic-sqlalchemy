@@ -72,9 +72,9 @@ body:
 
         Write a short description telling me what you are doing, what you expect to happen, and what is currently happening.
       placeholder: |
-        * Open the browser and call the endpoint `/`.
-        * It returns a JSON with `{"message": "Hello World"}`.
-        * But I expected it to return `{"message": "Hello Morty"}`.
+        * Create a SQLAlchemy 2.0 model `User`.
+        * Create a Pydantic model with `sqlalchemy_to_pydantic(User)`.
+        * An error is thrown unless I use SQLAlchemy 1.4, but I expect it to work.
     validations:
       required: true
   - type: dropdown
