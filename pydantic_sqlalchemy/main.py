@@ -35,4 +35,5 @@ def sqlalchemy_to_pydantic(
     pydantic_model = create_model(
         db_model.__name__, __config__=config, **fields  # type: ignore
     )
+    pydantic_model.__name__ = db_model.__name__
     return pydantic_model
