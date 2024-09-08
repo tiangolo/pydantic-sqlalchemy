@@ -1,0 +1,11 @@
+internal:
+  - all:
+    - changed-files:
+      - any-glob-to-any-file:
+        - .github/**
+        - scripts/**
+        - .gitignore
+        - .pre-commit-config.yaml
+        - requirements*.txt
+      - all-globs-to-all-files:
+        - '!pyproject.toml'
