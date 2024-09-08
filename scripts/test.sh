@@ -3,5 +3,7 @@
 set -e
 set -x
 
-bash ./scripts/lint.sh
-pytest --cov=pydantic_sqlalchemy --cov=tests --cov-report=term-missing --cov-report=xml ${@}
+coverage run -m pytest tests
+coverage combine
+coverage report
+coverage html
