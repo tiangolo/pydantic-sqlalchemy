@@ -124,6 +124,7 @@ def test_pydantic_sqlalchemy():
 
 #### Internal
 
+* 👷 Update issue-manager.yml GitHub Action permissions. PR [#78](https://github.com/tiangolo/pydantic-sqlalchemy/pull/78) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Update `latest-changes` GitHub Action. PR [#79](https://github.com/tiangolo/pydantic-sqlalchemy/pull/79) by [@tiangolo](https://github.com/tiangolo).
 * 🔧 Add GitHub templates for discussions and issues, and security policy. PR [#76](https://github.com/tiangolo/pydantic-sqlalchemy/pull/76) by [@alejsdev](https://github.com/alejsdev).
 * 👷 Add dependabot. PR [#60](https://github.com/tiangolo/pydantic-sqlalchemy/pull/60) by [@tiangolo](https://github.com/tiangolo).
