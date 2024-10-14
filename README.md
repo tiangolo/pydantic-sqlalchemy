@@ -124,6 +124,7 @@ def test_pydantic_sqlalchemy():
 
 #### Internal
 
+* 🔧 Re-create Python project config, dependencies, and CI, just to make CI run. PR [#101](https://github.com/tiangolo/pydantic-sqlalchemy/pull/101) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump actions/checkout from 2 to 4. PR [#62](https://github.com/tiangolo/pydantic-sqlalchemy/pull/62) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 👷 Update issue-manager.yml GitHub Action permissions. PR [#78](https://github.com/tiangolo/pydantic-sqlalchemy/pull/78) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Update `latest-changes` GitHub Action. PR [#79](https://github.com/tiangolo/pydantic-sqlalchemy/pull/79) by [@tiangolo](https://github.com/tiangolo).
