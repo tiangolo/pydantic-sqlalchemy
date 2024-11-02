@@ -124,6 +124,7 @@ def test_pydantic_sqlalchemy():
 
 #### Internal
 
+* ⬆ Bump ruff from 0.6.9 to 0.7.1. PR [#126](https://github.com/tiangolo/pydantic-sqlalchemy/pull/126) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Update pytest requirement from <8.0.0,>=7.0.1 to >=7.0.1,<9.0.0. PR [#104](https://github.com/tiangolo/pydantic-sqlalchemy/pull/104) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 👷 Add labeler GitHub Action. PR [#102](https://github.com/tiangolo/pydantic-sqlalchemy/pull/102) by [@tiangolo](https://github.com/tiangolo).
 * 🔧 Re-create Python project config, dependencies, and CI, just to make CI run. PR [#101](https://github.com/tiangolo/pydantic-sqlalchemy/pull/101) by [@tiangolo](https://github.com/tiangolo).
