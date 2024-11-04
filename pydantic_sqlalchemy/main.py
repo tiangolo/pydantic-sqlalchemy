@@ -1,12 +1,13 @@
 from typing import Container, Optional, Type
 
-from pydantic import BaseConfig, BaseModel, create_model
+from pydantic import BaseModel, create_model
+from pydantic.config import ConfigDict
 from sqlalchemy.inspection import inspect
 from sqlalchemy.orm.properties import ColumnProperty
 
 
-class OrmConfig(BaseConfig):
-    orm_mode = True
+class OrmConfig:
+    model_config = ConfigDict(from_attributes=True)
 
 
 def sqlalchemy_to_pydantic(
@@ -33,6 +34,6 @@ def sqlalchemy_to_pydantic(
                     default = ...
                 fields[name] = (python_type, default)
     pydantic_model = create_model(
-        db_model.__name__, __config__=config, **fields  # type: ignore
+        db_model.__name__, __config__=config.model_config, **fields  # type: ignore
     )
     return pydantic_model
