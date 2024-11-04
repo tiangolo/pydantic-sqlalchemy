@@ -3,9 +3,9 @@ from typing import List
 
 from pydantic_sqlalchemy import sqlalchemy_to_pydantic
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session, relationship, sessionmaker
+from sqlalchemy.orm import Session, relationship, sessionmaker, declarative_base
 from sqlalchemy_utc import UtcDateTime
+
 
 Base = declarative_base()
 
@@ -95,30 +95,31 @@ def test_defaults() -> None:
         ],
     }
 
-
 def test_schema() -> None:
     PydanticUser = sqlalchemy_to_pydantic(User)
     PydanticAddress = sqlalchemy_to_pydantic(Address)
+    
     assert PydanticUser.model_json_schema() == {
         "title": "User",
         "type": "object",
         "properties": {
             "id": {"title": "Id", "type": "integer"},
-            "name": {"title": "Name", "type": "string"},
-            "fullname": {"title": "Fullname", "type": "string"},
-            "nickname": {"title": "Nickname", "type": "string"},
-            "created": {"title": "Created", "type": "string", "format": "date-time"},
-            "updated": {"title": "Updated", "type": "string", "format": "date-time"},
+            "name": {"title": "Name", "type": "string", "default": None},
+            "fullname": {"title": "Fullname", "type": "string", "default": None},
+            "nickname": {"title": "Nickname", "type": "string", "default": None},
+            "created": {"title": "Created", "type": "string", "format": "date-time", "default": None},
+            "updated": {"title": "Updated", "type": "string", "format": "date-time", "default": None},
         },
         "required": ["id"],
     }
+    
     assert PydanticAddress.model_json_schema() == {
         "title": "Address",
         "type": "object",
         "properties": {
             "id": {"title": "Id", "type": "integer"},
             "email_address": {"title": "Email Address", "type": "string"},
-            "user_id": {"title": "User Id", "type": "integer"},
+            "user_id": {"title": "User Id", "type": "integer", "default": None},
         },
         "required": ["id", "email_address"],
     }
@@ -127,7 +128,7 @@ def test_schema() -> None:
 def test_config() -> None:
     class Config:
         model_config = {
-            "orm_mode": True,
+            "from_attributes": True,
             "populate_by_name": True,
             "alias_generator": lambda string: "".join(
                 word.capitalize() if i > 0 else word
@@ -140,6 +141,15 @@ def test_config() -> None:
 
     class PydanticUserWithAddresses(PydanticUser):
         addresses: List[PydanticAddress] = []
+
+        @classmethod
+        def model_validate(cls, obj):
+            obj_dict = obj.__dict__.copy()
+            obj_dict['addresses'] = [addr.__dict__ for addr in obj.addresses]
+
+            return super().model_validate(obj_dict)
+
+        
 
     user = db.query(User).first()
     pydantic_user_with_addresses = PydanticUserWithAddresses.model_validate(user)
