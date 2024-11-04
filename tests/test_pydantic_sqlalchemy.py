@@ -3,9 +3,9 @@ from typing import List
 
 from pydantic_sqlalchemy import sqlalchemy_to_pydantic
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, create_engine
-from sqlalchemy.orm import Session, relationship, sessionmaker, declarative_base
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import Session, relationship, sessionmaker
 from sqlalchemy_utc import UtcDateTime
-
 
 Base = declarative_base()
 
@@ -64,8 +64,8 @@ def test_defaults() -> None:
         addresses: List[PydanticAddress] = []
 
     user = db.query(User).first()
-    pydantic_user = PydanticUser.model_validate(user)
-    data = pydantic_user.model_dump()
+    pydantic_user = PydanticUser.from_orm(user)
+    data = pydantic_user.dict()
     assert isinstance(data["created"], datetime)
     assert isinstance(data["updated"], datetime)
     check_data = data.copy()
@@ -77,8 +77,8 @@ def test_defaults() -> None:
         "name": "ed",
         "nickname": "edsnickname",
     }
-    pydantic_user_with_addresses = PydanticUserWithAddresses.model_validate(user)
-    data = pydantic_user_with_addresses.model_dump()
+    pydantic_user_with_addresses = PydanticUserWithAddresses.from_orm(user)
+    data = pydantic_user_with_addresses.dict()
     assert isinstance(data["updated"], datetime)
     assert isinstance(data["created"], datetime)
     check_data = data.copy()
@@ -95,31 +95,30 @@ def test_defaults() -> None:
         ],
     }
 
+
 def test_schema() -> None:
     PydanticUser = sqlalchemy_to_pydantic(User)
     PydanticAddress = sqlalchemy_to_pydantic(Address)
-    
-    assert PydanticUser.model_json_schema() == {
+    assert PydanticUser.schema() == {
         "title": "User",
         "type": "object",
         "properties": {
             "id": {"title": "Id", "type": "integer"},
-            "name": {"title": "Name", "type": "string", "default": None},
-            "fullname": {"title": "Fullname", "type": "string", "default": None},
-            "nickname": {"title": "Nickname", "type": "string", "default": None},
-            "created": {"title": "Created", "type": "string", "format": "date-time", "default": None},
-            "updated": {"title": "Updated", "type": "string", "format": "date-time", "default": None},
+            "name": {"title": "Name", "type": "string"},
+            "fullname": {"title": "Fullname", "type": "string"},
+            "nickname": {"title": "Nickname", "type": "string"},
+            "created": {"title": "Created", "type": "string", "format": "date-time"},
+            "updated": {"title": "Updated", "type": "string", "format": "date-time"},
         },
         "required": ["id"],
     }
-    
-    assert PydanticAddress.model_json_schema() == {
+    assert PydanticAddress.schema() == {
         "title": "Address",
         "type": "object",
         "properties": {
             "id": {"title": "Id", "type": "integer"},
             "email_address": {"title": "Email Address", "type": "string"},
-            "user_id": {"title": "User Id", "type": "integer", "default": None},
+            "user_id": {"title": "User Id", "type": "integer"},
         },
         "required": ["id", "email_address"],
     }
@@ -127,14 +126,14 @@ def test_schema() -> None:
 
 def test_config() -> None:
     class Config:
-        model_config = {
-            "from_attributes": True,
-            "populate_by_name": True,
-            "alias_generator": lambda string: "".join(
-                word.capitalize() if i > 0 else word
-                for i, word in enumerate(string.split("_"))
-            ),
-        }
+        orm_mode = True
+        allow_population_by_field_name = True
+
+        @classmethod
+        def alias_generator(cls, string: str) -> str:
+            pascal_case = "".join(word.capitalize() for word in string.split("_"))
+            camel_case = pascal_case[0].lower() + pascal_case[1:]
+            return camel_case
 
     PydanticUser = sqlalchemy_to_pydantic(User)
     PydanticAddress = sqlalchemy_to_pydantic(Address, config=Config)
@@ -142,18 +141,9 @@ def test_config() -> None:
     class PydanticUserWithAddresses(PydanticUser):
         addresses: List[PydanticAddress] = []
 
-        @classmethod
-        def model_validate(cls, obj):
-            obj_dict = obj.__dict__.copy()
-            obj_dict['addresses'] = [addr.__dict__ for addr in obj.addresses]
-
-            return super().model_validate(obj_dict)
-
-        
-
     user = db.query(User).first()
-    pydantic_user_with_addresses = PydanticUserWithAddresses.model_validate(user)
-    data = pydantic_user_with_addresses.model_dump(by_alias=True)
+    pydantic_user_with_addresses = PydanticUserWithAddresses.from_orm(user)
+    data = pydantic_user_with_addresses.dict(by_alias=True)
     assert isinstance(data["created"], datetime)
     assert isinstance(data["updated"], datetime)
     check_data = data.copy()
@@ -179,8 +169,8 @@ def test_exclude() -> None:
         addresses: List[PydanticAddress] = []
 
     user = db.query(User).first()
-    pydantic_user_with_addresses = PydanticUserWithAddresses.model_validate(user)
-    data = pydantic_user_with_addresses.model_dump(by_alias=True)
+    pydantic_user_with_addresses = PydanticUserWithAddresses.from_orm(user)
+    data = pydantic_user_with_addresses.dict(by_alias=True)
     assert isinstance(data["created"], datetime)
     assert isinstance(data["updated"], datetime)
     check_data = data.copy()
@@ -195,4 +185,3 @@ def test_exclude() -> None:
             {"email_address": "eddy@example.com", "id": 2},
         ],
     }
-
