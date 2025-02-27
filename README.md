@@ -124,6 +124,7 @@ def test_pydantic_sqlalchemy():
 
 #### Internal
 
+* 🔥 Drop support for Python 3.7. PR [#154](https://github.com/tiangolo/pydantic-sqlalchemy/pull/154) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump tiangolo/latest-changes from 0.3.1 to 0.3.2. PR [#133](https://github.com/tiangolo/pydantic-sqlalchemy/pull/133) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pypa/gh-action-pypi-publish from 1.10.3 to 1.11.0. PR [#127](https://github.com/tiangolo/pydantic-sqlalchemy/pull/127) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.6.9 to 0.7.1. PR [#126](https://github.com/tiangolo/pydantic-sqlalchemy/pull/126) by [@dependabot[bot]](https://github.com/apps/dependabot).
