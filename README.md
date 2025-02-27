@@ -124,6 +124,7 @@ def test_pydantic_sqlalchemy():
 
 #### Internal
 
+* Enable CI for Python 3.9 - 3.13. [af66239](https://github.com/tiangolo/pydantic-sqlalchemy/commit/af66239b3c0a949b5f1fe6a99b4f96a78e9e659c) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump ruff from 0.7.1 to 0.9.8. PR [#156](https://github.com/tiangolo/pydantic-sqlalchemy/pull/156) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump astral-sh/setup-uv from 3 to 5. PR [#144](https://github.com/tiangolo/pydantic-sqlalchemy/pull/144) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pypa/gh-action-pypi-publish from 1.11.0 to 1.12.4. PR [#151](https://github.com/tiangolo/pydantic-sqlalchemy/pull/151) by [@dependabot[bot]](https://github.com/apps/dependabot).
