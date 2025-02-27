@@ -124,6 +124,7 @@ def test_pydantic_sqlalchemy():
 
 #### Internal
 
+* ⬆ Bump astral-sh/setup-uv from 3 to 5. PR [#144](https://github.com/tiangolo/pydantic-sqlalchemy/pull/144) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pypa/gh-action-pypi-publish from 1.11.0 to 1.12.4. PR [#151](https://github.com/tiangolo/pydantic-sqlalchemy/pull/151) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 🔥 Drop support for Python 3.7. PR [#154](https://github.com/tiangolo/pydantic-sqlalchemy/pull/154) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump tiangolo/latest-changes from 0.3.1 to 0.3.2. PR [#133](https://github.com/tiangolo/pydantic-sqlalchemy/pull/133) by [@dependabot[bot]](https://github.com/apps/dependabot).
