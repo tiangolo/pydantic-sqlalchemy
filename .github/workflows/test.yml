@@ -27,7 +27,6 @@ jobs:
     strategy:
       matrix:
         python-version:
-          - "3.7"
           - "3.8"
       fail-fast: false
     
@@ -54,8 +53,6 @@ jobs:
       - name: Install Dependencies
         run: uv pip install -r requirements-tests.txt
       # - name: Lint
-      #   # Do not run on Python 3.7 as mypy behaves differently
-      #   if: matrix.python-version != '3.7'
       #   run: bash scripts/lint.sh
       - run: mkdir coverage
       - name: Test

@@ -7,7 +7,7 @@ name = "pydantic-sqlalchemy"
 dynamic = ["version"]
 description = "Tools to convert SQLAlchemy models to Pydantic models"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 authors = [
     { name = "Sebastián Ramírez", email = "tiangolo@gmail.com" },
 ]
