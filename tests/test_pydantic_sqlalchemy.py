@@ -104,11 +104,21 @@ def test_schema() -> None:
         "type": "object",
         "properties": {
             "id": {"title": "Id", "type": "integer"},
-            "name": {"title": "Name", "type": "string"},
-            "fullname": {"title": "Fullname", "type": "string"},
-            "nickname": {"title": "Nickname", "type": "string"},
-            "created": {"title": "Created", "type": "string", "format": "date-time"},
-            "updated": {"title": "Updated", "type": "string", "format": "date-time"},
+            "name": {"title": "Name", "type": "string", "default": None},
+            "fullname": {"title": "Fullname", "type": "string", "default": None},
+            "nickname": {"title": "Nickname", "type": "string", "default": None},
+            "created": {
+                "title": "Created",
+                "type": "string",
+                "format": "date-time",
+                "default": None,
+            },
+            "updated": {
+                "title": "Updated",
+                "type": "string",
+                "format": "date-time",
+                "default": None,
+            },
         },
         "required": ["id"],
     }
@@ -118,7 +128,7 @@ def test_schema() -> None:
         "properties": {
             "id": {"title": "Id", "type": "integer"},
             "email_address": {"title": "Email Address", "type": "string"},
-            "user_id": {"title": "User Id", "type": "integer"},
+            "user_id": {"title": "User Id", "type": "integer", "default": None},
         },
         "required": ["id", "email_address"],
     }
