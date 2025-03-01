@@ -23,7 +23,7 @@ class User(Base):
     name = Column(String)
     fullname = Column(String)
     nickname = Column(String)
-    created = Column(DateTime, default=datetime.utcnow)
+    created = Column(DateTime, default=datetime.now(timezone.utc))
     updated = Column(UtcDateTime, default=utc_now, onupdate=utc_now)
 
     addresses = relationship(
