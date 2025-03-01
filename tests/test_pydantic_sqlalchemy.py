@@ -3,8 +3,8 @@ from typing import List
 
 from pydantic_sqlalchemy import sqlalchemy_to_pydantic
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session, relationship, sessionmaker
+
+from sqlalchemy.orm import Session, relationship, sessionmaker, declarative_base
 from sqlalchemy_utc import UtcDateTime
 
 Base = declarative_base()
