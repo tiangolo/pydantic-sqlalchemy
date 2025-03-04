@@ -1,6 +1,6 @@
 from typing import Container, Optional, Type
 
-from pydantic import ConfigDict, BaseModel, create_model, Field
+from pydantic import ConfigDict, BaseModel, create_model
 from sqlalchemy.inspection import inspect
 from sqlalchemy.orm.properties import ColumnProperty
 
