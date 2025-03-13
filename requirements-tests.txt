@@ -3,7 +3,7 @@ pytest >=7.0.1,<9.0.0
 coverage[toml] >=6.2,<8.0
 mypy ==1.4.1
 ruff ==0.9.8
-typing-extensions ==4.6.1
+typing-extensions ==4.12.2
 
 pytest-cov ==4.1.0
 sqlalchemy-utc >=0.14.0,<0.15.0
