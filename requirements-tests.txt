@@ -7,3 +7,4 @@ typing-extensions ==4.12.2
 
 pytest-cov ==4.1.0
 sqlalchemy-utc >=0.14.0,<0.15.0
+pydantic >= 2.0.0
