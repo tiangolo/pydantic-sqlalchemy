@@ -124,6 +124,7 @@ def test_pydantic_sqlalchemy():
 
 #### Internal
 
+* ⬆ Bump typing-extensions from 4.6.1 to 4.13.2. PR [#173](https://github.com/tiangolo/pydantic-sqlalchemy/pull/173) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump astral-sh/setup-uv from 5 to 6. PR [#176](https://github.com/tiangolo/pydantic-sqlalchemy/pull/176) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.9.8 to 0.11.13. PR [#182](https://github.com/tiangolo/pydantic-sqlalchemy/pull/182) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * Enable CI for Python 3.9 - 3.13. [af66239](https://github.com/tiangolo/pydantic-sqlalchemy/commit/af66239b3c0a949b5f1fe6a99b4f96a78e9e659c) by [@tiangolo](https://github.com/tiangolo).
