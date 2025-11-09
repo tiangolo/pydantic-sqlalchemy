@@ -124,6 +124,7 @@ def test_pydantic_sqlalchemy():
 
 #### Internal
 
+* ⬆ Bump pypa/gh-action-pypi-publish from 1.12.4 to 1.13.0. PR [#207](https://github.com/tiangolo/pydantic-sqlalchemy/pull/207) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump actions/checkout from 4 to 5. PR [#202](https://github.com/tiangolo/pydantic-sqlalchemy/pull/202) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump tiangolo/latest-changes from 0.3.2 to 0.4.0. PR [#198](https://github.com/tiangolo/pydantic-sqlalchemy/pull/198) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump typing-extensions from 4.6.1 to 4.13.2. PR [#173](https://github.com/tiangolo/pydantic-sqlalchemy/pull/173) by [@dependabot[bot]](https://github.com/apps/dependabot).
