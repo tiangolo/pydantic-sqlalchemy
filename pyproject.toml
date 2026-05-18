@@ -14,7 +14,7 @@ authors = [
 
 dependencies = [
     "SQLAlchemy >=1.3.16,<2.0.0",
-    "pydantic >=1.5.1,<2.0.0",
+    "pydantic >=1.5.1,<3.0.0",
 ]
 
 [project.urls]
