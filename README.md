@@ -124,6 +124,7 @@ def test_pydantic_sqlalchemy():
 
 #### Internal
 
+* Dependabot: remove pip-level label assignment from grouped updates. PR [#234](https://github.com/tiangolo/pydantic-sqlalchemy/pull/234) by [@Copilot](https://github.com/apps/copilot-swe-agent).
 * 👷 Upgrade actions/checkout from v5 to v6. PR [#225](https://github.com/tiangolo/pydantic-sqlalchemy/pull/225) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Upgrade `latest-changes` GitHub Action and pin `actions/checkout@v5`. PR [#224](https://github.com/tiangolo/pydantic-sqlalchemy/pull/224) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump actions/labeler from 5 to 6. PR [#208](https://github.com/tiangolo/pydantic-sqlalchemy/pull/208) by [@dependabot[bot]](https://github.com/apps/dependabot).
