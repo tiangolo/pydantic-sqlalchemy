@@ -118,6 +118,10 @@ def test_pydantic_sqlalchemy():
 
 ### Latest Changes
 
+#### Breaking Changes
+
+* ➖ Drop support for End of Life Python versions 3.8 and 3.9. PR [#240](https://github.com/tiangolo/pydantic-sqlalchemy/pull/240) by [@tiangolo](https://github.com/tiangolo).
+
 #### Docs
 
 * 📝 Add SQLModel docs. PR [#70](https://github.com/tiangolo/pydantic-sqlalchemy/pull/70) by [@tiangolo](https://github.com/tiangolo).
