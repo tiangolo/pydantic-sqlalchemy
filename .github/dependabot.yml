@@ -7,12 +7,12 @@ updates:
       interval: "daily"
     commit-message:
       prefix: ⬆
+    cooldown:
+      default-days: 7
     groups:
       github-actions:
         patterns:
           - "*"
-        cooldown:
-          default-days: 7
   # Python
   - package-ecosystem: "pip"
     directory: "/"
@@ -20,10 +20,10 @@ updates:
       interval: "daily"
     commit-message:
       prefix: ⬆
+    cooldown:
+      default-days: 7
     groups:
       python-packages:
         dependency-type: "development"
         patterns:
           - "*"
-        cooldown:
-          default-days: 7
