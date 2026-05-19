@@ -118,6 +118,10 @@ def test_pydantic_sqlalchemy():
 
 ### Latest Changes
 
+#### Internal
+
+* ⬆ Bump the github-actions group across 1 directory with 6 updates. PR [#237](https://github.com/tiangolo/pydantic-sqlalchemy/pull/237) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
 ### 0.0.10
 
 #### Breaking Changes
