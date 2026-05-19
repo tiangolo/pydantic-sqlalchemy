@@ -20,8 +20,11 @@ updates:
       interval: "daily"
     commit-message:
       prefix: ⬆
+    labels:
+      - "internal"
     groups:
       python-packages:
+        dependency-type: "development"
         patterns:
           - "*"
         cooldown:
