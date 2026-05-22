@@ -120,6 +120,7 @@ def test_pydantic_sqlalchemy():
 
 #### Internal
 
+* 🔥 Remove configs now stored in central GitHub repo. PR [#241](https://github.com/tiangolo/pydantic-sqlalchemy/pull/241) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump the github-actions group across 1 directory with 6 updates. PR [#237](https://github.com/tiangolo/pydantic-sqlalchemy/pull/237) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
 ### 0.0.10
