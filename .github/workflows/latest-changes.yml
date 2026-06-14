@@ -23,6 +23,6 @@ jobs:
       - uses: actions/checkout@v6
         with:
           token: ${{ secrets.PYDANTIC_SQLALCHEMY_LATEST_CHANGES }}
-      - uses: tiangolo/latest-changes@0.4.1
+      - uses: tiangolo/latest-changes@0.5.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
