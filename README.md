@@ -115,6 +115,10 @@ def test_pydantic_sqlalchemy():
 
 ### Latest Changes
 
+#### Docs
+
+* 📝 Update docs badges: remove Publish badge, it doesn't give extra information. PR [#251](https://github.com/tiangolo/pydantic-sqlalchemy/pull/251) by [@tiangolo](https://github.com/tiangolo).
+
 #### Internal
 
 * 👷 Fix alls-green test dependency. PR [#250](https://github.com/tiangolo/pydantic-sqlalchemy/pull/250) by [@tiangolo](https://github.com/tiangolo).
