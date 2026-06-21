@@ -120,6 +120,7 @@ def test_pydantic_sqlalchemy():
 
 #### Internal
 
+* 👷 Fix alls-green test dependency. PR [#250](https://github.com/tiangolo/pydantic-sqlalchemy/pull/250) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump tiangolo/latest-changes from 0.4.1 to 0.5.0 in the github-actions group across 1 directory. PR [#244](https://github.com/tiangolo/pydantic-sqlalchemy/pull/244) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 🔥 Remove configs now stored in central GitHub repo. PR [#241](https://github.com/tiangolo/pydantic-sqlalchemy/pull/241) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump the github-actions group across 1 directory with 6 updates. PR [#237](https://github.com/tiangolo/pydantic-sqlalchemy/pull/237) by [@dependabot[bot]](https://github.com/apps/dependabot).
