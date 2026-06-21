@@ -1,5 +1,4 @@
 name: Test
-
 on:
   push:
     branches:
@@ -17,10 +16,8 @@ on:
   # schedule:
   #   # cron every week on monday
   #   - cron: "0 1 * * 1"
-
 env:
   UV_SYSTEM_PYTHON: 1
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -32,15 +29,16 @@ jobs:
           - "3.12"
           - "3.13"
       fail-fast: false
-    
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          persist-credentials: false
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
         with:
           python-version: ${{ matrix.python-version }}
       - name: Setup uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
         with:
           version: "0.4.15"
           enable-cache: true
@@ -49,7 +47,7 @@ jobs:
             pyproject.toml
       # Allow debugging with tmate
       - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+        uses: mxschmitt/action-tmate@35b54afac29c97fb54faba5b513f8fbd1882f113 # v3
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled == 'true' }}
         with:
           limit-access-to-actor: true
@@ -64,23 +62,26 @@ jobs:
           COVERAGE_FILE: coverage/.coverage.${{ runner.os }}-py${{ matrix.python-version }}
           CONTEXT: ${{ runner.os }}-py${{ matrix.python-version }}
       - name: Store coverage files
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: coverage-${{ matrix.python-version }}
           path: coverage
           include-hidden-files: true
-
+    permissions:
+      contents: read
   coverage-combine:
     needs:
       - test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
         with:
           python-version: '3.12'
       - name: Setup uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
         with:
           version: "0.4.15"
           enable-cache: true
@@ -88,7 +89,7 @@ jobs:
             requirements**.txt
             pyproject.toml
       - name: Get coverage files
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           pattern: coverage-*
           path: coverage
@@ -99,14 +100,16 @@ jobs:
       - run: coverage report
       - run: coverage html --title "Coverage for ${{ github.sha }}"
       - name: Store coverage HTML
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: coverage-html
           path: htmlcov
           include-hidden-files: true
-
+    permissions:
+      actions: read
+      contents: read
   # https://github.com/marketplace/actions/alls-green#why
-  alls-green:  # This job does nothing and is only used for the branch protection
+  alls-green: # This job does nothing and is only used for the branch protection
     if: always()
     needs:
       - coverage-combine
@@ -114,6 +117,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Decide whether the needed jobs succeeded or failed
-        uses: re-actors/alls-green@release/v1
+        uses: re-actors/alls-green@05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe # v1.2.2
         with:
           jobs: ${{ toJSON(needs) }}
+    permissions: {}
+permissions: {}
