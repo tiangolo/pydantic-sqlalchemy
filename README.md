@@ -121,6 +121,7 @@ def test_pydantic_sqlalchemy():
 
 #### Internal
 
+* ⬆️ Update issue-manager to 0.7.0. PR [#254](https://github.com/tiangolo/pydantic-sqlalchemy/pull/254) by [@tiangolo](https://github.com/tiangolo).
 * 🔒️ Add zizmor workflow security checks. PR [#252](https://github.com/tiangolo/pydantic-sqlalchemy/pull/252) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Fix alls-green test dependency. PR [#250](https://github.com/tiangolo/pydantic-sqlalchemy/pull/250) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump tiangolo/latest-changes from 0.4.1 to 0.5.0 in the github-actions group across 1 directory. PR [#244](https://github.com/tiangolo/pydantic-sqlalchemy/pull/244) by [@dependabot[bot]](https://github.com/apps/dependabot).
