@@ -8,6 +8,7 @@
 
 ### Internal
 
+* 📝 Refactor release notes, move to its own file. PR [#256](https://github.com/tiangolo/pydantic-sqlalchemy/pull/256) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Update issue-manager to 0.7.1. PR [#255](https://github.com/tiangolo/pydantic-sqlalchemy/pull/255) by [@tiangolo](https://github.com/tiangolo).
 * ⬆️ Update issue-manager to 0.7.0. PR [#254](https://github.com/tiangolo/pydantic-sqlalchemy/pull/254) by [@tiangolo](https://github.com/tiangolo).
 * 🔒️ Add zizmor workflow security checks. PR [#252](https://github.com/tiangolo/pydantic-sqlalchemy/pull/252) by [@tiangolo](https://github.com/tiangolo).
@@ -94,4 +95,3 @@
 * Add support for `exclude` to exclude columns from Pydantic model. PR [#3](https://github.com/tiangolo/pydantic-sqlalchemy/pull/3).
 * Add support for overriding the Pydantic `config`. PR [#1](https://github.com/tiangolo/pydantic-sqlalchemy/pull/1) by [@pyropy](https://github.com/pyropy).
 * Add CI with GitHub Actions. PR [#2](https://github.com/tiangolo/pydantic-sqlalchemy/pull/2).
-
