@@ -25,7 +25,7 @@ jobs:
         with:
           token: ${{ secrets.PYDANTIC_SQLALCHEMY_LATEST_CHANGES }} # zizmor: ignore[secrets-outside-env]
           persist-credentials: true # required by tiangolo/latest-changes
-      - uses: tiangolo/latest-changes@eb3f6e7ff0073896ecb561e774a121de9418fa06 # 0.5.0
+      - uses: tiangolo/latest-changes@c9b73efbc8992ef1a401e4235ea307a8ca8a724b # 0.6.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           latest_changes_file: release-notes.md
