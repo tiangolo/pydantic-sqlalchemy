@@ -8,6 +8,7 @@
 
 ### Internal
 
+* ⬆️ Update latest-changes to 0.6.1. PR [#260](https://github.com/tiangolo/pydantic-sqlalchemy/pull/260) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Simplify pull request workflow triggers. PR [#258](https://github.com/tiangolo/pydantic-sqlalchemy/pull/258) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Update setup-python pin comment to 6.2.0. PR [#257](https://github.com/tiangolo/pydantic-sqlalchemy/pull/257) by [@tiangolo](https://github.com/tiangolo).
 * 📝 Refactor release notes, move to its own file. PR [#256](https://github.com/tiangolo/pydantic-sqlalchemy/pull/256) by [@tiangolo](https://github.com/tiangolo).
