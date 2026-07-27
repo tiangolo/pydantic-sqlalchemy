@@ -8,6 +8,7 @@
 
 ### Internal
 
+* ⬆️ Upgrade latest-changes to 0.7.1. PR [#265](https://github.com/tiangolo/pydantic-sqlalchemy/pull/265) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Fix latest-changes checkout target. PR [#263](https://github.com/tiangolo/pydantic-sqlalchemy/pull/263) by [@tiangolo](https://github.com/tiangolo).
 * ⬆️ Update issue-manager to 0.8.1. PR [#261](https://github.com/tiangolo/pydantic-sqlalchemy/pull/261) by [@tiangolo](https://github.com/tiangolo).
 * ⬆️ Update latest-changes to 0.6.1. PR [#260](https://github.com/tiangolo/pydantic-sqlalchemy/pull/260) by [@tiangolo](https://github.com/tiangolo).
