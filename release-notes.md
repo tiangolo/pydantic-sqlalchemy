@@ -8,6 +8,7 @@
 
 ### Internal
 
+* 🔧 Fix Zizmor version comments. PR [#268](https://github.com/tiangolo/pydantic-sqlalchemy/pull/268) by [@tiangolo](https://github.com/tiangolo).
 * 🔥 Remove the old Latest Changes workflow. PR [#267](https://github.com/tiangolo/pydantic-sqlalchemy/pull/267) by [@tiangolo](https://github.com/tiangolo).
 * ⬆️ Upgrade latest-changes to 0.7.1. PR [#265](https://github.com/tiangolo/pydantic-sqlalchemy/pull/265) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Fix latest-changes checkout target. PR [#263](https://github.com/tiangolo/pydantic-sqlalchemy/pull/263) by [@tiangolo](https://github.com/tiangolo).
