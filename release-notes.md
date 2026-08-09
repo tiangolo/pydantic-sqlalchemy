@@ -8,6 +8,7 @@
 
 ### Internal
 
+* ⬆ Update pre-commit requirement from <5.0.0,>=2.17.0 to >=4.6.0,<5.0.0. PR [#246](https://github.com/tiangolo/pydantic-sqlalchemy/pull/246) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump the github-actions group across 1 directory with 6 updates. PR [#266](https://github.com/tiangolo/pydantic-sqlalchemy/pull/266) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 🔧 Fix Zizmor version comments. PR [#268](https://github.com/tiangolo/pydantic-sqlalchemy/pull/268) by [@tiangolo](https://github.com/tiangolo).
 * 🔥 Remove the old Latest Changes workflow. PR [#267](https://github.com/tiangolo/pydantic-sqlalchemy/pull/267) by [@tiangolo](https://github.com/tiangolo).
