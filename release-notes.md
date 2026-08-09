@@ -8,6 +8,7 @@
 
 ### Internal
 
+* ⬆ Bump the github-actions group across 1 directory with 6 updates. PR [#266](https://github.com/tiangolo/pydantic-sqlalchemy/pull/266) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 🔧 Fix Zizmor version comments. PR [#268](https://github.com/tiangolo/pydantic-sqlalchemy/pull/268) by [@tiangolo](https://github.com/tiangolo).
 * 🔥 Remove the old Latest Changes workflow. PR [#267](https://github.com/tiangolo/pydantic-sqlalchemy/pull/267) by [@tiangolo](https://github.com/tiangolo).
 * ⬆️ Upgrade latest-changes to 0.7.1. PR [#265](https://github.com/tiangolo/pydantic-sqlalchemy/pull/265) by [@tiangolo](https://github.com/tiangolo).
