@@ -8,6 +8,7 @@
 
 ### Internal
 
+* 👷 Remove legacy label check. PR [#269](https://github.com/tiangolo/pydantic-sqlalchemy/pull/269) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Update pytest requirement from <9.0.0,>=7.0.1 to >=9.1.1,<10.0.0. PR [#248](https://github.com/tiangolo/pydantic-sqlalchemy/pull/248) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Update coverage requirement from <8.0,>=6.2 to >=7.14.1,<8.0. PR [#247](https://github.com/tiangolo/pydantic-sqlalchemy/pull/247) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Update pre-commit requirement from <5.0.0,>=2.17.0 to >=4.6.0,<5.0.0. PR [#246](https://github.com/tiangolo/pydantic-sqlalchemy/pull/246) by [@dependabot[bot]](https://github.com/apps/dependabot).
