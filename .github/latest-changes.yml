@@ -1,0 +1,7 @@
+auto-labels:
+  internal:
+    - .github/**
+    - scripts/**
+    - .gitignore
+    - .pre-commit-config.yaml
+    - requirements*.txt
