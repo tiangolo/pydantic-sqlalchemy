@@ -8,6 +8,7 @@
 
 ### Internal
 
+* ⬆ Bump the github-actions group across 1 directory with 3 updates. PR [#277](https://github.com/tiangolo/pydantic-sqlalchemy/pull/277) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 👷 Migrate automatic labels to Latest Changes. PR [#270](https://github.com/tiangolo/pydantic-sqlalchemy/pull/270) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Remove legacy label check. PR [#269](https://github.com/tiangolo/pydantic-sqlalchemy/pull/269) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Update pytest requirement from <9.0.0,>=7.0.1 to >=9.1.1,<10.0.0. PR [#248](https://github.com/tiangolo/pydantic-sqlalchemy/pull/248) by [@dependabot[bot]](https://github.com/apps/dependabot).
