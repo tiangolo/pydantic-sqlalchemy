@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Upgrades
+
+* ⬆️ Use latest-known uv and upgrade GitHub Actions. PR [#280](https://github.com/tiangolo/pydantic-sqlalchemy/pull/280) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
 ### Docs
 
 * 📝 Update docs badges: remove Publish badge, it doesn't give extra information. PR [#251](https://github.com/tiangolo/pydantic-sqlalchemy/pull/251) by [@tiangolo](https://github.com/tiangolo).
